@@ -101,8 +101,8 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @PutMapping("/shops/{shopId}")
-    public Object updateShop(@PathVariable Long shopId,
+    @PutMapping("/shops/{id}")
+    public Object updateShop(@PathVariable Long id,
                              @Depart Long departId,
                              @Validated @RequestBody ShopVoBody vo,
                              BindingResult bindingResult) {
