@@ -136,18 +136,18 @@ public class ShopController {
     })
     @Audit
     @DeleteMapping("/shops/{id}")
-    public Object userCloseShop(@PathVariable Long shopId,
+    public Object userCloseShop(@PathVariable Long id,
                                 @Depart Long departId) {
-        if (shopId.equals(departId)||departId.equals(0l)) {
+        if (id.equals(departId)||departId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
+            shop.setId(id);
             if(shop.getState().equals(Shop.State.ONLINE)){
                 shop.setState((byte)Shop.State.DELETE.getCode());
             }
             else{
                 return ResponseCode.SHOP_STATENOTALLOW;
             }
-            ReturnObject returnObject = shopService.closeShop(shopId);
+            ReturnObject returnObject = shopService.closeShop(id);
             return Common.decorateReturnObject(returnObject);
         }
         else {
@@ -209,12 +209,12 @@ public class ShopController {
     })
     @Audit
     @PutMapping("/shops/{id}/onshelves")
-    public Object userOnShelvesShop(@PathVariable Long shopId,
+    public Object userOnShelvesShop(@PathVariable Long id,
                                     @Depart Long departId) {
 
         if (departId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
+            shop.setId(id);
 //            if(shop.getState().equals(Shop.State.OFFLINE)){
 //                shop.setState((byte)Shop.State.ONLINE.getCode());
 //            }
@@ -241,10 +241,10 @@ public class ShopController {
     })
     @Audit
     @PutMapping("/shops/{id}/offshelves")
-    public Object userOffShelvesShop(@PathVariable Long shopId, @Depart Long departId) {
+    public Object userOffShelvesShop(@PathVariable Long id, @Depart Long departId) {
         if (departId.equals(0l)) {
             Shop shop = new Shop();
-            shop.setId(shopId);
+            shop.setId(id);
 //            if (shop.getState().equals(Shop.State.ONLINE)) {
 //                shop.setState((byte) Shop.State.OFFLINE.getCode());
 //            } else {
