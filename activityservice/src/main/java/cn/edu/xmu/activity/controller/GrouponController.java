@@ -136,14 +136,14 @@ public class GrouponController {
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
         if (startTime == null) {
-            startTime = "1900-01-01T00:00:00";
+            startTime = "1900-01-01 00:00:00";
         }
         if (endTime == null) {
-            endTime = "2999-01-01T00:00:00";
+            endTime = "2999-01-01 00:00:00";
         }
-
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ReturnObject<PageInfo<VoObject>> returnObject = grouponService.selectGroupon(id, state, spuId,
-                LocalDateTime.parse(startTime), LocalDateTime.parse(endTime), page, pageSize);
+                LocalDateTime.parse(startTime,df), LocalDateTime.parse(endTime,df), page, pageSize);
         if (returnObject.getCode().equals(ResponseCode.OK)) {
             return Common.getPageRetObject(returnObject);
         } else {
@@ -325,7 +325,7 @@ public class GrouponController {
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 906, message = "优惠活动禁止")
     })
-    //@Audit // 需要认证
+    @Audit // 需要认证
     @PutMapping("/shops/{shopId}/groupons/{id}/onshelves")
     public Object grouponOn(@PathVariable Long id, @PathVariable Long shopId) {
         ReturnObject retObject = grouponService.changeGrouponState(shopId, id, Groupon.State.ON.getCode());

@@ -163,7 +163,7 @@ public class PreSaleController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功")
     })
-    //@Audit
+    @Audit
     @PostMapping(value = "/shops/{shopId}/skus/{id}/presales", produces = "application/json;charset=UTF-8")
     public Object insertPreSale(
             @PathVariable Long shopId,
