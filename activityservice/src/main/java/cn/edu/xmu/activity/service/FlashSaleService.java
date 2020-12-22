@@ -2,7 +2,6 @@ package cn.edu.xmu.activity.service;
 
 import cn.edu.xmu.activity.dao.FlashSaleDao;
 import cn.edu.xmu.activity.dao.FlashSaleItemDao;
-import cn.edu.xmu.activity.mapper.TimeSegmentPoMapper;
 import cn.edu.xmu.activity.model.bo.FlashSale;
 import cn.edu.xmu.activity.model.bo.FlashSaleItem;
 import cn.edu.xmu.activity.model.po.*;
@@ -16,7 +15,7 @@ import cn.edu.xmu.goodsservice.model.bo.ShopSimple;
 import cn.edu.xmu.ooad.util.ResponseCode;
 import cn.edu.xmu.ooad.util.ReturnObject;
 import cn.edu.xmu.otherservice.client.OtherService;
-import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,6 @@ import reactor.core.publisher.Flux;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,8 +51,8 @@ public class FlashSaleService {
     @DubboReference(check = false)
     IGoodsService goodsService;
 
-     @DubboReference(check = false)
-     OtherService otherService;
+    @DubboReference(check = false,version = "1.0.0",group = "other-service")
+    OtherService otherService;
 
     @Autowired
     private ReactiveRedisTemplate<String, Serializable> reactiveRedisTemplate;
@@ -75,12 +73,15 @@ public class FlashSaleService {
         return reactiveRedisTemplate.opsForSet().members(segIdStr).map(x -> (FlashSaleItem) x);
     }
 
+    public List<TimeSegmentVo> returnAllTimeSegmentVo(){
+        return otherService.getAllTimeSegment();
+    }
 
     @Transactional
     public Flux<FlashSaleItem> getCurrentFlashSale(LocalDateTime localDateTime) {
         String currentNow = "flashSaleNow_" + localDateTime.toString();
         if (redisTemplate.opsForSet().size(currentNow) == 0) {
-            TimeSegmentPo timeSegmentPo = returnCurrentTimeSegmentPo();
+            TimeSegmentVo timeSegmentPo = returnCurrentTimeSegmentVo();
             if (timeSegmentPo != null) {
                 List<FlashSalePo> flashSalePos = flashSaleDao.getFlashSalesByTimeSegmentId(timeSegmentPo.getId());
                 if (flashSalePos.size() != 0) {
@@ -100,7 +101,7 @@ public class FlashSaleService {
 
     @Transactional
     public ReturnObject createNewFlashSale(NewFlashSaleVo vo, Long id) {
-        TimeSegmentPo timeSegmentPo = getTimeSegmentPoById(id);
+        TimeSegmentVo timeSegmentPo = getTimeSegmentVoById(id);
         // 时间段不存在
         if (timeSegmentPo == null) {
             return new ReturnObject(ResponseCode.RESOURCE_ID_NOTEXIST);
@@ -231,17 +232,18 @@ public class FlashSaleService {
 
 
 
-  /*  @Autowired
-    TimeSegmentPoMapper timeSegmentPoMapper;
+/*
+    @Autowired
+    TimeSegmentVoMapper timeSegmentPoMapper;
 
-    private List<TimeSegmentPo> getAllTimeSegment() {
-        TimeSegmentPoExample timeSegmentPoExample = new TimeSegmentPoExample();
-        TimeSegmentPoExample.Criteria criteria = timeSegmentPoExample.createCriteria();
+    private List<TimeSegmentVo> getAllTimeSegment() {
+        TimeSegmentVoExample timeSegmentPoExample = new TimeSegmentVoExample();
+        TimeSegmentVoExample.Criteria criteria = timeSegmentPoExample.createCriteria();
         criteria.andTypeEqualTo((byte) 1);
-        List<cn.edu.xmu.activity.model.po.TimeSegmentPo> timeSegmentPos = timeSegmentPoMapper.selectByExample(timeSegmentPoExample);
-        List<TimeSegmentPo> timeSegmentPosReturn = new ArrayList<>(timeSegmentPos.size());
-        for (cn.edu.xmu.activity.model.po.TimeSegmentPo timeSegmentPo : timeSegmentPos) {
-            TimeSegmentPo timeSegmentPoReturn = new TimeSegmentPo();
+        List<cn.edu.xmu.activity.model.po.TimeSegmentVo> timeSegmentPos = timeSegmentPoMapper.selectByExample(timeSegmentPoExample);
+        List<TimeSegmentVo> timeSegmentPosReturn = new ArrayList<>(timeSegmentPos.size());
+        for (cn.edu.xmu.activity.model.po.TimeSegmentVo timeSegmentPo : timeSegmentPos) {
+            TimeSegmentVo timeSegmentPoReturn = new TimeSegmentVo();
             timeSegmentPoReturn.setBeginTime(timeSegmentPo.getBeginTime());
             timeSegmentPoReturn.setEndTime(timeSegmentPo.getBeginTime());
             timeSegmentPoReturn.setGmtCreate(timeSegmentPo.getGmtModified());
@@ -253,11 +255,11 @@ public class FlashSaleService {
         return timeSegmentPosReturn;
     }
 */
-    private TimeSegmentPo getTimeSegmentPoById(Long timeSegmentId) {
-        List<TimeSegmentPo> allTimeSegment = otherService.getAllTimeSegment();
-        for (TimeSegmentPo timeSegmentPo : allTimeSegment) {
-            if (timeSegmentPo.getId().equals(timeSegmentId)) {
-                return timeSegmentPo;
+    private TimeSegmentVo getTimeSegmentVoById(Long timeSegmentId) {
+        List<TimeSegmentVo> allTimeSegment = otherService.getAllTimeSegment();
+        for (TimeSegmentVo timeSegmentVo : allTimeSegment) {
+            if (timeSegmentVo.getId().equals(timeSegmentId)) {
+                return timeSegmentVo;
             }
         }
         return null;
@@ -328,11 +330,11 @@ public class FlashSaleService {
 
 
     /******************时间段补丁*******************/
-    public TimeSegmentPo returnCurrentTimeSegmentPo() {
+    public TimeSegmentVo returnCurrentTimeSegmentVo() {
         LocalDateTime nowTime = LocalDateTime.now();
-        List<TimeSegmentPo> allTimeSegment = otherService.getAllTimeSegment();
-        for (TimeSegmentPo timeSegmentPoPast : allTimeSegment) {
-            TimeSegmentPo timeSegmentPo = new TimeSegmentPo();
+        List<TimeSegmentVo> allTimeSegment = otherService.getAllTimeSegment();
+        for (TimeSegmentVo timeSegmentPoPast : allTimeSegment) {
+            TimeSegmentVo timeSegmentPo = new TimeSegmentVo();
             timeSegmentPo.setBeginTime(createRealTime(LocalDateTime.now(), timeSegmentPoPast.getBeginTime()));
             timeSegmentPo.setEndTime(createRealTime(LocalDateTime.now(),timeSegmentPoPast.getEndTime()));
             if (timeSegmentPo.getEndTime().compareTo(nowTime) > 0 &&

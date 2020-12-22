@@ -11,6 +11,7 @@ import cn.edu.xmu.ooad.util.Common;
 import cn.edu.xmu.ooad.util.ResponseCode;
 import cn.edu.xmu.ooad.util.ResponseUtil;
 import cn.edu.xmu.ooad.util.ReturnObject;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.ibatis.annotations.Delete;
@@ -71,6 +72,11 @@ public class FlashSaleController {
         return flashSaleService.getFlashSale(id).map(x -> (FlashSaleRetItemVo) x.createVo());
     }
 
+
+    @GetMapping("/test/test")
+    public List<TimeSegmentVo> returnAllTimeSegmentTest(){
+        return flashSaleService.returnAllTimeSegmentVo();
+    }
     /**
      * @param id
      * @param vo
