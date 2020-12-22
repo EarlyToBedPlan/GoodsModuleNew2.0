@@ -14,10 +14,7 @@ spring:
         login-password: 123456
         enabled: true
         url-pattern: /druid/*
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 114.215.198.238:8848
+
 
 #  dubbo:
 #    scan:
