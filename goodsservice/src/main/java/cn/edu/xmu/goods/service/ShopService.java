@@ -37,7 +37,7 @@ public class ShopService{
     GoodsSkuDao goodsSkuDao;
     @Autowired
     GoodsSpuService goodsSpuService;
-    @DubboReference(check = false,version = "2.5.0")
+    @DubboReference(check = false)
     IUserService userService;
 
     /** 
