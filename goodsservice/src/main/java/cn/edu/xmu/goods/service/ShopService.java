@@ -161,7 +161,10 @@ public class ShopService{
             ShopPo shopPo=shopDao.getShopById(shop.getId());
             if(shopPo==null){
                 return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
+            } if(shopPo.getState() != Shop.State.OFFLINE.getCode()) {
+                return new ReturnObject<>(ResponseCode.SHOP_STATENOTALLOW, String.format("店铺不存在 id：" + shop.getId()));
             }
+            shop.setState((byte)Shop.State.ONLINE.getCode());
             return shopDao.changeShopState(shop);
         } catch (Exception e) {
             logger.error("发生了严重的服务器内部错误：" + e.getMessage());
@@ -182,7 +185,10 @@ public class ShopService{
             ShopPo shopPo=shopDao.getShopById(shop.getId());
             if(shopPo==null){
                 return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
+            } if(shopPo.getState() != Shop.State.ONLINE.getCode() && shopPo.getState() != Shop.State.UNAUDITED.getCode()) {
+                return new ReturnObject<>(ResponseCode.SHOP_STATENOTALLOW, String.format("店铺不存在 id：" + shop.getId()));
             }
+            shop.setState((byte)Shop.State.OFFLINE.getCode());
             return shopDao.changeShopState(shop);
         } catch (Exception e) {
             logger.error("发生了严重的服务器内部错误：" + e.getMessage());
