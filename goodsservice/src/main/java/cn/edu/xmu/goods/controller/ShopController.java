@@ -176,18 +176,7 @@ public class ShopController {
         if (deptId.equals(0l)) {
             Shop shop=new Shop();
             shop.setId(id);
-            if(shop.getState().equals(Shop.State.UNAUDITED)){
-                if(conclusion.getConclusion()==true){
-                    shop.setState((byte)Shop.State.OFFLINE.getCode());
-                }
-                else {
-                    shop.setState((byte)Shop.State.FAILED.getCode());
-                }
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.auditShop(shop);
+            ReturnObject returnObject = shopService.auditShop(shop,conclusion.getConclusion());
             return Common.decorateReturnObject(returnObject);
         } else {
             return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
