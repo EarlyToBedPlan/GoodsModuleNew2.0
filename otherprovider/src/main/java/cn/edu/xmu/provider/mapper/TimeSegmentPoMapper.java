@@ -1,7 +1,9 @@
 package cn.edu.xmu.provider.mapper;
 
+
 import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
 import cn.edu.xmu.otherservice.model.po.TimeSegmentPoExample;
+
 import java.util.List;
 
 public interface TimeSegmentPoMapper {
