@@ -1,7 +1,7 @@
 package cn.edu.xmu.otherservice.client;
 
-import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
 import cn.edu.xmu.otherservice.model.vo.CustomerVo;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface OtherService {
      * @author: Feiyan Liu
      * @date: Created at 2020/12/6 19:22
      */
-    List<TimeSegmentPo> getAllTimeSegment();
+    List<TimeSegmentVo> getAllTimeSegment();
 
     /**
      * @description:根据id获取时段信息
