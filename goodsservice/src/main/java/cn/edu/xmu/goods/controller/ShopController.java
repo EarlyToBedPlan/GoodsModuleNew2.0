@@ -40,6 +40,17 @@ public class ShopController {
     @Autowired
     private HttpServletResponse httpServletResponse;
 
+    @ApiOperation(value = "店家申请店铺")
+    @ApiImplicitParams({
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+    })
+    @GetMapping("/shops/states")
+    public Object getShopState() {
+        return Common.decorateReturnObject(shopService.getShopStates());
+    }
+
 
     /**
      * 店家申请店铺

@@ -61,8 +61,8 @@ public class GoodsSkuService {
     @Autowired
     ShopService shopService;
 
-    @DubboReference(version = "2.7.8",group = "activity-service",check = false)
-    IActivityService iActivityService;
+//    @DubboReference(version = "2.7.8",group = "activity-service",check = false)
+//    IActivityService iActivityService;
 
     @Value("${goodsservice.dav.username}")
     private String davUsername;
@@ -452,7 +452,7 @@ public class GoodsSkuService {
     @Transactional
     public Long getPriceById(Long goodsSkuId) {
         Long result = null;
-        result = iActivityService.getFlashSalePriceBySkuId(goodsSkuId);
+        //result = iActivityService.getFlashSalePriceBySkuId(goodsSkuId);
         if(result != null){
             return  result;
         }
