@@ -1,7 +1,8 @@
 package cn.edu.xmu.provider.mapper;
 
-import cn.edu.xmu.otherservice.model.po.CustomerPo;
-import cn.edu.xmu.otherservice.model.po.CustomerPoExample;
+
+import cn.edu.xmu.provider.model.po.CustomerPo;
+import cn.edu.xmu.provider.model.po.CustomerPoExample;
 
 import java.util.List;
 
