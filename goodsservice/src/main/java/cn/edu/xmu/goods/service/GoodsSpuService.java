@@ -125,11 +125,11 @@ public class GoodsSpuService{
                 goodsSpuRetVo.setCategory(goodsCategorySimpleVo);
             }
 
-            Long freightId = goodsSpuPo.getFreightId();
-            FreightModel freightModel = orderService.getFreightModelById(freightId);
-            if(freightModel != null){
-                goodsSpuRetVo.setFreightModel(freightModel);
-            }
+//            Long freightId = goodsSpuPo.getFreightId();
+//            FreightModel freightModel = orderService.getFreightModelById(freightId);
+//            if(freightModel != null){
+//                goodsSpuRetVo.setFreightModel(freightModel);
+//            }
 
             Spec s = new Spec();
             String specJson = goodsSpuPo.getSpec();
@@ -295,8 +295,8 @@ public class GoodsSpuService{
     @Transactional
     public ReturnObject setSkuDisabledByShopId(Long shopId){
         List<Long> spuIds = goodsSpuDao.setAllSpuDisabledByShopId(shopId);
-        for(Long spuId : spuIds){
-            goodsSkuDao.setSkuDisabledBySpuId(spuId);
+        if(spuIds!=null && spuIds.size()!=0){
+                goodsSkuDao.setSkuDisabledBySpuId(spuIds);
         }
         return new ReturnObject<>();
     }
