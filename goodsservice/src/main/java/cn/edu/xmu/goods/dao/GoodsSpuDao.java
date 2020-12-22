@@ -435,11 +435,13 @@ public class GoodsSpuDao {
         criteria.andShopIdEqualTo(shopId);
         List<Long> ret = new ArrayList<>();
         List<GoodsSpuPo> goodsSpuPos = goodsSpuPoMapper.selectByExample(example);
-        for(GoodsSpuPo goodsSpuPo: goodsSpuPos){
-            if(goodsSpuPo.getDisabled()==0){
-                goodsSpuPo.setDisabled((byte)1);
-                goodsSpuPoMapper.updateByPrimaryKeySelective(goodsSpuPo);
-                ret.add(goodsSpuPo.getId());
+        if(goodsSpuPos != null && goodsSpuPos.size()>0){
+            for(GoodsSpuPo goodsSpuPo: goodsSpuPos){
+                if(goodsSpuPo.getDisabled()==0){
+                    goodsSpuPo.setDisabled((byte)1);
+                    goodsSpuPoMapper.updateByPrimaryKeySelective(goodsSpuPo);
+                    ret.add(goodsSpuPo.getId());
+                }
             }
         }
         return ret;

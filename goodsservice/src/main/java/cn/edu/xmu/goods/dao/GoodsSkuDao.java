@@ -501,14 +501,16 @@ public class GoodsSkuDao {
     * @Date: 2020/12/11 21:03
     */
     @Transactional
-    public ReturnObject setSkuDisabledBySpuId(Long spuId){
+    public ReturnObject setSkuDisabledBySpuId(List<Long> spuId){
             GoodsSkuPoExample goodsSkuPoExample = new GoodsSkuPoExample();
             GoodsSkuPoExample.Criteria criteria1 = goodsSkuPoExample.createCriteria();
-            criteria1.andGoodsSpuIdEqualTo(spuId);
+            criteria1.andGoodsSpuIdIn(spuId);
             List<GoodsSkuPo> goodsSkuPos = goodsSkuPoMapper.selectByExample(goodsSkuPoExample);
-            for(GoodsSkuPo goodsSkuPo : goodsSkuPos ) {
-                goodsSkuPo.setDisabled((byte) 1);
-                goodsSkuPoMapper.updateByPrimaryKeySelective(goodsSkuPo);
+            if(goodsSkuPos != null && goodsSkuPos.size() >0){
+                for(GoodsSkuPo goodsSkuPo : goodsSkuPos ) {
+                    goodsSkuPo.setDisabled((byte) 1);
+                    goodsSkuPoMapper.updateByPrimaryKeySelective(goodsSkuPo);
+                }
             }
         return new ReturnObject<>();
     }
