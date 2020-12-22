@@ -110,7 +110,7 @@ public class ShopController {
         if (null != errors) {
             return errors;
         }
-        if(departId.equals(shopId)){
+        if(departId.equals(shopId) || departId == 0l){
             Shop shop = new Shop(vo);
             shop.setId(shopId);
             ReturnObject returnObject = shopService.updateShop(shop);
@@ -215,12 +215,12 @@ public class ShopController {
         if (departId.equals(0l)) {
             Shop shop=new Shop();
             shop.setId(shopId);
-            if(shop.getState().equals(Shop.State.OFFLINE)){
-                shop.setState((byte)Shop.State.ONLINE.getCode());
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
+//            if(shop.getState().equals(Shop.State.OFFLINE)){
+//                shop.setState((byte)Shop.State.ONLINE.getCode());
+//            }
+//            else{
+//                return ResponseCode.SHOP_STATENOTALLOW;
+//            }
             ReturnObject returnObject = shopService.onShelvesShop(shop);
             return Common.decorateReturnObject(returnObject);
         } else {
@@ -245,11 +245,11 @@ public class ShopController {
         if (departId.equals(0l)) {
             Shop shop = new Shop();
             shop.setId(shopId);
-            if (shop.getState().equals(Shop.State.ONLINE)) {
-                shop.setState((byte) Shop.State.OFFLINE.getCode());
-            } else {
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
+//            if (shop.getState().equals(Shop.State.ONLINE)) {
+//                shop.setState((byte) Shop.State.OFFLINE.getCode());
+//            } else {
+//                return ResponseCode.SHOP_STATENOTALLOW;
+//            }
             ReturnObject returnObject = shopService.offShelvesShop(shop);
             return Common.decorateReturnObject(returnObject);
         } else {
