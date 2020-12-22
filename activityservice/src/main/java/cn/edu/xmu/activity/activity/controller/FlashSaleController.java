@@ -62,7 +62,7 @@ public class FlashSaleController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功")
     })
-    @Audit //认证
+    //@Audit //认证
     @GetMapping(value = "/timesegments/{id}/flashsales")
     public Flux<FlashSaleRetItemVo> getFlashSale(@PathVariable Long id) {
         if (logger.isDebugEnabled()) {
@@ -127,7 +127,7 @@ public class FlashSaleController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功")
     })
-    @Audit //认证
+    //@Audit //认证
     // produces=MediaType.APPLICATION_STREAM_JSON_VALUE 使得返回的数据不会被[   ,    ]包裹起来
     @GetMapping(value = "/flashsales/current")
     public Flux<FlashSaleRetItemVo> getFlashSale() {
