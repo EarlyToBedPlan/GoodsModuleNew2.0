@@ -169,7 +169,7 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{shopId}/newshops/{id}/audit")
+    @PutMapping("/shops/{shopId}/newshops/{id}/audit")
     public Object userAuditShop(@PathVariable Long id,
                                 @PathVariable Long shopId,
                                 @RequestBody CommentConclusionVo conclusion,
@@ -208,7 +208,7 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{id}/onshelves")
+    @PutMapping("/shops/{id}/onshelves")
     public Object userOnShelvesShop(@PathVariable Long shopId,
                                     @Depart Long departId) {
 
@@ -240,7 +240,7 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{id}/offshelves")
+    @PutMapping("/shops/{id}/offshelves")
     public Object userOffShelvesShop(@PathVariable Long shopId, @Depart Long departId) {
         if (departId.equals(0l)) {
             Shop shop = new Shop();
