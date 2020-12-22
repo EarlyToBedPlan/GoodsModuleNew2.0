@@ -7,7 +7,6 @@ import cn.edu.xmu.otherservice.model.vo.CustomerVo;
 import cn.edu.xmu.provider.mapper.CustomerPoMapper;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
 @DubboService(version = "2.4.0")
