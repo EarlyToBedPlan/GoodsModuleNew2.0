@@ -315,123 +315,123 @@ public class FavouriteGoodsPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdIsNull() {
-            addCriterion("goods_sku_id is null");
+        public Criteria andGoodsSpuIdIsNull() {
+            addCriterion("goods_spu_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdIsNotNull() {
-            addCriterion("goods_sku_id is not null");
+        public Criteria andGoodsSpuIdIsNotNull() {
+            addCriterion("goods_spu_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdEqualTo(Long value) {
-            addCriterion("goods_sku_id =", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdEqualTo(Long value) {
+            addCriterion("goods_spu_id =", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdNotEqualTo(Long value) {
-            addCriterion("goods_sku_id <>", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdNotEqualTo(Long value) {
+            addCriterion("goods_spu_id <>", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdGreaterThan(Long value) {
-            addCriterion("goods_sku_id >", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdGreaterThan(Long value) {
+            addCriterion("goods_spu_id >", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("goods_sku_id >=", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("goods_spu_id >=", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdLessThan(Long value) {
-            addCriterion("goods_sku_id <", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdLessThan(Long value) {
+            addCriterion("goods_spu_id <", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdLessThanOrEqualTo(Long value) {
-            addCriterion("goods_sku_id <=", value, "goodsSkuId");
+        public Criteria andGoodsSpuIdLessThanOrEqualTo(Long value) {
+            addCriterion("goods_spu_id <=", value, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdIn(List<Long> values) {
-            addCriterion("goods_sku_id in", values, "goodsSkuId");
+        public Criteria andGoodsSpuIdIn(List<Long> values) {
+            addCriterion("goods_spu_id in", values, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdNotIn(List<Long> values) {
-            addCriterion("goods_sku_id not in", values, "goodsSkuId");
+        public Criteria andGoodsSpuIdNotIn(List<Long> values) {
+            addCriterion("goods_spu_id not in", values, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdBetween(Long value1, Long value2) {
-            addCriterion("goods_sku_id between", value1, value2, "goodsSkuId");
+        public Criteria andGoodsSpuIdBetween(Long value1, Long value2) {
+            addCriterion("goods_spu_id between", value1, value2, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGoodsSkuIdNotBetween(Long value1, Long value2) {
-            addCriterion("goods_sku_id not between", value1, value2, "goodsSkuId");
+        public Criteria andGoodsSpuIdNotBetween(Long value1, Long value2) {
+            addCriterion("goods_spu_id not between", value1, value2, "goodsSpuId");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateIsNull() {
-            addCriterion("gmt_create is null");
+        public Criteria andGmtCreatedIsNull() {
+            addCriterion("gmt_created is null");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateIsNotNull() {
-            addCriterion("gmt_create is not null");
+        public Criteria andGmtCreatedIsNotNull() {
+            addCriterion("gmt_created is not null");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateEqualTo(LocalDateTime value) {
-            addCriterion("gmt_create =", value, "gmtCreate");
+        public Criteria andGmtCreatedEqualTo(LocalDateTime value) {
+            addCriterion("gmt_created =", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateNotEqualTo(LocalDateTime value) {
-            addCriterion("gmt_create <>", value, "gmtCreate");
+        public Criteria andGmtCreatedNotEqualTo(LocalDateTime value) {
+            addCriterion("gmt_created <>", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateGreaterThan(LocalDateTime value) {
-            addCriterion("gmt_create >", value, "gmtCreate");
+        public Criteria andGmtCreatedGreaterThan(LocalDateTime value) {
+            addCriterion("gmt_created >", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("gmt_create >=", value, "gmtCreate");
+        public Criteria andGmtCreatedGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("gmt_created >=", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateLessThan(LocalDateTime value) {
-            addCriterion("gmt_create <", value, "gmtCreate");
+        public Criteria andGmtCreatedLessThan(LocalDateTime value) {
+            addCriterion("gmt_created <", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("gmt_create <=", value, "gmtCreate");
+        public Criteria andGmtCreatedLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("gmt_created <=", value, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateIn(List<LocalDateTime> values) {
-            addCriterion("gmt_create in", values, "gmtCreate");
+        public Criteria andGmtCreatedIn(List<LocalDateTime> values) {
+            addCriterion("gmt_created in", values, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateNotIn(List<LocalDateTime> values) {
-            addCriterion("gmt_create not in", values, "gmtCreate");
+        public Criteria andGmtCreatedNotIn(List<LocalDateTime> values) {
+            addCriterion("gmt_created not in", values, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("gmt_create between", value1, value2, "gmtCreate");
+        public Criteria andGmtCreatedBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("gmt_created between", value1, value2, "gmtCreated");
             return (Criteria) this;
         }
 
-        public Criteria andGmtCreateNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("gmt_create not between", value1, value2, "gmtCreate");
+        public Criteria andGmtCreatedNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("gmt_created not between", value1, value2, "gmtCreated");
             return (Criteria) this;
         }
 

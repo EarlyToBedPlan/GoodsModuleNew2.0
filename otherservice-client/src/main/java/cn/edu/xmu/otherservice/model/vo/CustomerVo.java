@@ -16,7 +16,7 @@ public class CustomerVo implements Serializable {
     String mobile;
     String email;
     String gender;
-    LocalDate birthday;
+    LocalDateTime birthday;
     LocalDateTime gmt_created;
     LocalDateTime gmt_modified;
 
@@ -32,7 +32,7 @@ public class CustomerVo implements Serializable {
         this.gender = customerPo.getGender().intValue()>0?"男":"女";
         this.birthday = customerPo.getBirthday();
         this.gmt_modified = customerPo.getGmtModified();
-        this.gmt_created = customerPo.getGmtCreate();
+        this.gmt_created = customerPo.getGmtCreated();
     }
 
 

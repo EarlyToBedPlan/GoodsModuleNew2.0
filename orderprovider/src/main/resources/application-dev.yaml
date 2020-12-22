@@ -15,15 +15,7 @@ spring:
     # Redis服务器连接端口
     port: 6379
 
-  mail:
-    host: smtp.qq.com
-    port: 587
-    username: 925882085@qq.com
-    password: lwjlfkksssdnbbhj
-    default-encoding: UTF-8
-    properties:
-      mail:
-        smtp:
-          socketFactory:
-            class: javax.net.ssl.SSLSocketFactory
-        debug: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.16.4.171:8848
