@@ -3,7 +3,7 @@ package cn.edu.xmu.activity.model.bo;
 import cn.edu.xmu.activity.model.po.FlashSalePo;
 import cn.edu.xmu.activity.model.vo.FlashSaleVo;
 import cn.edu.xmu.ooad.model.VoObject;
-import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class FlashSale implements VoObject {
 
     private LocalDateTime flashDate;
 
-    private TimeSegmentPo timeSeq;
+    private TimeSegmentVo timeSeq;
 
     private LocalDateTime gmtCreated;
 
@@ -66,12 +66,12 @@ public class FlashSale implements VoObject {
 
     private Byte state;
 
-    public FlashSale(FlashSalePo po, TimeSegmentPo timeSegmentPo) {
+    public FlashSale(FlashSalePo po, TimeSegmentVo timeSegmentVo) {
         id = po.getId();
         flashDate = po.getFlashDate();
         gmtCreated = po.getGmtCreate();
         gmtModified = po.getGmtModified();
-        timeSeq = timeSegmentPo;
+        timeSeq = timeSegmentVo;
         state = po.getState();
     }
 

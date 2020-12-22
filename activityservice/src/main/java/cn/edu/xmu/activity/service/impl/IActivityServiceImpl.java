@@ -5,11 +5,10 @@ import cn.edu.xmu.activity.dao.FlashSaleDao;
 import cn.edu.xmu.activity.model.po.FlashSaleItemPo;
 import cn.edu.xmu.activity.service.FlashSaleService;
 import cn.edu.xmu.goodsservice.client.IActivityService;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
-
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Feiyan Liu
@@ -22,9 +21,9 @@ public class IActivityServiceImpl implements IActivityService {
     FlashSaleService flashSaleService;
     @Override
     public Long getFlashSalePriceBySkuId(Long id) {
-        TimeSegmentPo timeSegmentPo = flashSaleService.returnCurrentTimeSegmentPo();
-        if (timeSegmentPo != null) {
-            FlashSaleItemPo flashSaleItemPo = flashSaleService.getFlashSaleItemPoByTimeSegmentAndGoodsSkuId(timeSegmentPo.getId(), id);
+        TimeSegmentVo timeSegmentVo = flashSaleService.returnCurrentTimeSegmentVo();
+        if (timeSegmentVo != null) {
+            FlashSaleItemPo flashSaleItemPo = flashSaleService.getFlashSaleItemPoByTimeSegmentAndGoodsSkuId(timeSegmentVo.getId(), id);
             if (flashSaleItemPo != null) {
                 return flashSaleItemPo.getPrice();
             }

@@ -1,7 +1,7 @@
 package cn.edu.xmu.activity.model.vo;
 
 import cn.edu.xmu.ooad.model.VoObject;
-import cn.edu.xmu.otherservice.model.po.TimeSegmentPo;
+import cn.edu.xmu.otherservice.model.vo.TimeSegmentVo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class FlashSaleVo implements VoObject {
     private LocalDateTime flashDate;
 
 //    private Long timeSegId;
-    private TimeSegmentPo timeSeq;
+    private TimeSegmentVo timeSeq;
     private LocalDateTime gmtCreated;
 
 
