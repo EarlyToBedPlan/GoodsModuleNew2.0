@@ -175,7 +175,7 @@ public class ShopController {
                                 @Depart Long deptId) {
         if (deptId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
+            shop.setId(id);
             if(shop.getState().equals(Shop.State.UNAUDITED)){
                 if(conclusion.getConclusion()==true){
                     shop.setState((byte)Shop.State.OFFLINE.getCode());
