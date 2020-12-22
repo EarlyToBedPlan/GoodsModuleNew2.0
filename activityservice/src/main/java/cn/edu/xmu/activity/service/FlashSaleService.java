@@ -231,7 +231,7 @@ public class FlashSaleService {
 
 
 
-    @Autowired
+  /*  @Autowired
     TimeSegmentPoMapper timeSegmentPoMapper;
 
     private List<TimeSegmentPo> getAllTimeSegment() {
@@ -252,9 +252,9 @@ public class FlashSaleService {
         }
         return timeSegmentPosReturn;
     }
-
+*/
     private TimeSegmentPo getTimeSegmentPoById(Long timeSegmentId) {
-        List<TimeSegmentPo> allTimeSegment = getAllTimeSegment();
+        List<TimeSegmentPo> allTimeSegment = otherService.getAllTimeSegment();
         for (TimeSegmentPo timeSegmentPo : allTimeSegment) {
             if (timeSegmentPo.getId().equals(timeSegmentId)) {
                 return timeSegmentPo;
@@ -330,7 +330,7 @@ public class FlashSaleService {
     /******************时间段补丁*******************/
     public TimeSegmentPo returnCurrentTimeSegmentPo() {
         LocalDateTime nowTime = LocalDateTime.now();
-        List<TimeSegmentPo> allTimeSegment = getAllTimeSegment();
+        List<TimeSegmentPo> allTimeSegment = otherService.getAllTimeSegment();
         for (TimeSegmentPo timeSegmentPoPast : allTimeSegment) {
             TimeSegmentPo timeSegmentPo = new TimeSegmentPo();
             timeSegmentPo.setBeginTime(createRealTime(LocalDateTime.now(), timeSegmentPoPast.getBeginTime()));
