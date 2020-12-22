@@ -68,7 +68,6 @@ public class ShopController {
     @PostMapping("/shops")
     public Object insertShop(@Validated @RequestBody ShopVoBody shopVoBody,
                              BindingResult bindingResult,
-                             @PathVariable Long id,
                              @Depart Long departId) {
         Object errors = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (null != errors) {
@@ -110,9 +109,9 @@ public class ShopController {
         if (null != errors) {
             return errors;
         }
-        if(departId.equals(shopId) || departId == 0l){
+        if(departId.equals(id) || departId == 0l){
             Shop shop = new Shop(vo);
-            shop.setId(shopId);
+            shop.setId(id);
             ReturnObject returnObject = shopService.updateShop(shop);
             return Common.decorateReturnObject(returnObject);
         }
@@ -174,7 +173,7 @@ public class ShopController {
                                 @PathVariable Long shopId,
                                 @RequestBody CommentConclusionVo conclusion,
                                 @Depart Long deptId) {
-        if (id.equals(0l)) {
+        if (deptId.equals(0l)) {
             Shop shop=new Shop();
             shop.setId(shopId);
             if(shop.getState().equals(Shop.State.UNAUDITED)){
