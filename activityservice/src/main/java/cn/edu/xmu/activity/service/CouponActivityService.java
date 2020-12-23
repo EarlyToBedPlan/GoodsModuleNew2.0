@@ -462,25 +462,26 @@ public class CouponActivityService {
 
     @Transactional
     public ReturnObject<List<String>> getCoupon(Long userId, Long id) {
-        String activityKey = "couponactivity_" + id;
-        if (!redisTemplate.hasKey(activityKey)) {
-            CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
-            //检测活动是否存在
-            if (couponActivityPo == null||couponActivityPo.getState()==CouponActivity.State.DELETED.getCode())
-                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
-            String json=JacksonUtil.toJson(couponActivityPo);
-        redisTemplate.opsForValue().set(activityKey, json,600,TimeUnit.SECONDS);
-//            logger.debug(JacksonUtil.toJson(couponActivityPo));
-        }
-        String json = (String) redisTemplate.opsForValue().get(activityKey);
-        ObjectMapper objectMapper = new ObjectMapper();
-        CouponActivityPo couponActivityPo = null;
-        try {
-            couponActivityPo = objectMapper.readValue(json, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        String activityKey = "couponactivity_" + id;
+//        if (!redisTemplate.hasKey(activityKey)) {
+//            CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
+//            //检测活动是否存在
+//            if (couponActivityPo == null||couponActivityPo.getState()==CouponActivity.State.DELETED.getCode())
+//                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
+//            String json=JacksonUtil.toJson(couponActivityPo);
+//        redisTemplate.opsForValue().set(activityKey, json,600,TimeUnit.SECONDS);
+////            logger.debug(JacksonUtil.toJson(couponActivityPo));
+//        }
+//        String json = (String) redisTemplate.opsForValue().get(activityKey);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        CouponActivityPo couponActivityPo = null;
+//        try {
+//            couponActivityPo = objectMapper.readValue(json, new TypeReference<>() {
+//            });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
         //优惠券活动不是上线状态
         if (couponActivityPo.getState().byteValue() != (byte) CouponActivity.State.ONLINE.getCode())
             return new ReturnObject(ResponseCode.COUPONACT_STATENOTALLOW);
@@ -502,11 +503,11 @@ public class CouponActivityService {
             else {
                 //如果redis中没有 是第一位领券的 将优惠券信息放入redis
                 String key = "coupon_" + couponActivityPo.getId();
-                if (!redisTemplate.hasKey(key))
-                    redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity());
-                //查询用户是否领过优惠券
-                if (redisTemplate.hasKey("coupon_" + id + "_" + userId))
-                    return new ReturnObject<>(ResponseCode.USER_HASCOUPON);
+//                if (!redisTemplate.hasKey(key))
+//                    redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity());
+//                //查询用户是否领过优惠券
+//                if (redisTemplate.hasKey("coupon_" + id + "_" + userId))
+//                    return new ReturnObject<>(ResponseCode.USER_HASCOUPON);
                 if (quantityType == 0)//每人数量
                 {
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
@@ -530,7 +531,7 @@ public class CouponActivityService {
                     CouponActivityPo couponActivityPo1=new CouponActivityPo();
                     couponActivityPo1.setId(id);
                     String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    couponActivityPo1.setQuantity(Integer.parseInt(couponQuantity));
+                    couponActivityPo1.setQuantity(couponActivityPo.getQuantity()-1);
                     CouponActivity couponActivity=new CouponActivity(couponActivityPo1);
                    // sendUpdateCouponQuantityMessage(couponActivityPo1);
                     couponActivityDao.updateCouponActivity(couponActivity);
