@@ -518,23 +518,20 @@ public class CouponActivityService {
                         returnObject.add(couponPo.getCouponSn());
                     }
                     //设置结束时间
-                    long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
-                    redisTemplate.opsForValue().set("coupon_" + id + "_" + userId, 1, second, TimeUnit.SECONDS);
+                    //long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
+                   // redisTemplate.opsForValue().set("coupon_" + id + "_" + userId, 1, second, TimeUnit.SECONDS);
                 } else if (quantityType == 1) {
-                   // String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    Long result = getCouponByLuaScript(key,1);
-                    if (result == 0)
-                        return new ReturnObject(ResponseCode.COUPON_FINISH);
+                   ///Long result = getCouponByLuaScript(key,1);
+//                    if (result == 0)
+//                        return new ReturnObject(ResponseCode.COUPON_FINISH);
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
                    // sendCouponMessage(couponPo);
                     couponDao.addCoupon(couponPo);
                     CouponActivityPo couponActivityPo1=new CouponActivityPo();
                     couponActivityPo1.setId(id);
                     String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    couponActivityPo1.setQuantity(couponActivityPo.getQuantity()-1);
-                    CouponActivity couponActivity=new CouponActivity(couponActivityPo1);
                    // sendUpdateCouponQuantityMessage(couponActivityPo1);
-                    couponActivityDao.updateCouponActivity(couponActivity);
+                    couponActivityDao.updateCouponActivityQuantity(couponActivityPo.getQuantity()-1,id);
                     returnObject.add(couponPo.getCouponSn());
                     //设置结束时间
                     long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
