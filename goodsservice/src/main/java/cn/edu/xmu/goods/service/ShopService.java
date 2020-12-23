@@ -48,14 +48,12 @@ public class ShopService{
     * @Author: Yancheng Lai
     * @Date: 2020/12/20 22:50
     */
-    public ReturnObject getShopStates(){
+    public ReturnObject<List<StateVo>> getShopStates(){
         List<StateVo> lst = new ArrayList<StateVo>();
-
         for (Shop.State e : Shop.State.values()) {
             StateVo stateVo = new StateVo((byte)e.getCode(),e.getDescription());
             lst.add(stateVo);
         }
-
         return new ReturnObject<>( lst);
     }
 
