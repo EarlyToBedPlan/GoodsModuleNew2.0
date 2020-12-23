@@ -179,7 +179,7 @@ public class ShopController {
             ReturnObject returnObject = shopService.auditShop(shop,conclusion.getConclusion());
             return Common.decorateReturnObject(returnObject);
         } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
 
