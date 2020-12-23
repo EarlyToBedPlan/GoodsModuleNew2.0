@@ -531,7 +531,7 @@ public class CouponActivityService {
                     couponActivityPo1.setId(id);
                     String couponQuantity=redisTemplate.opsForValue().get(key).toString();
                     couponActivityPo1.setQuantity(Integer.parseInt(couponQuantity));
-                    CouponActivity couponActivity=new CouponActivity(couponActivityPo);
+                    CouponActivity couponActivity=new CouponActivity(couponActivityPo1);
                    // sendUpdateCouponQuantityMessage(couponActivityPo1);
                     couponActivityDao.updateCouponActivity(couponActivity);
                     returnObject.add(couponPo.getCouponSn());
