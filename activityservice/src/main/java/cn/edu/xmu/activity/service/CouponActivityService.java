@@ -57,7 +57,7 @@ public class CouponActivityService {
     CouponSkuDao couponSkuDao;
     @Autowired
     CouponDao couponDao;
-    @DubboReference(check = false,version = "2.2.0",group = "goods-service")
+    @DubboReference(check = false,version = "2.2.0")
     IGoodsService goodsService;
     @Resource
     RocketMQTemplate rocketMQTemplate;

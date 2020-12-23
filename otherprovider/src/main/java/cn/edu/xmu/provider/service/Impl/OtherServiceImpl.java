@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@DubboService(version = "1.0.0",group = "other-service")
+@DubboService(version = "2.4.0")
 public class OtherServiceImpl implements OtherService {
 
     @Autowired

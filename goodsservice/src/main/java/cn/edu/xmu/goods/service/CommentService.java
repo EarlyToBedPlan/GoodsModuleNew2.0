@@ -35,9 +35,6 @@ public class CommentService{
     @DubboReference(check=false,version = "2.3.0")
     OrderService orderService;
 
-    @DubboReference(check = false,version = "2.4.0")
-    OtherService otherService;
-
     private Logger logger= LoggerFactory.getLogger(CommentService.class);
 
 

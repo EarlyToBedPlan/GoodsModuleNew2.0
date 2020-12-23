@@ -38,8 +38,7 @@ public class ShopService{
     GoodsSkuDao goodsSkuDao;
     @Autowired
     GoodsSpuService goodsSpuService;
-    @DubboReference(check = false)
-    IUserService userService;
+
 
     /** 
     * @Description: 得到店铺状态 

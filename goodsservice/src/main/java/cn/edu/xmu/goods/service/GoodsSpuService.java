@@ -60,7 +60,7 @@ public class GoodsSpuService{
     @Autowired
     GoodsSkuService goodsSkuService;
 
-    @DubboReference(check = false)
+    @DubboReference(check = false,version = "2.3.0")
     OrderService orderService;
 
     //@Autowired
