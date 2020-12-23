@@ -55,7 +55,7 @@ public class CommentService{
             if(insert.getCode().equals(ResponseCode.COMMENT_EXISTED.getCode()))
                 return  insert;
             CommentPo commentPo= commentDao.newGoodsSkuComment(comment);
-            comment.setCustomerRetVo(new CustomerRetVo(otherService.getUserById(commentPo.getCustomerId())));
+          //  comment.setCustomerRetVo(new CustomerRetVo(otherService.getUserById(commentPo.getCustomerId())));
             comment.setId(commentPo.getId());
             VoObject retVo= comment.createRetVo();
             return new ReturnObject<>(retVo);
