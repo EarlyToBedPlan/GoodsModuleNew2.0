@@ -512,7 +512,8 @@ public class CouponActivityService {
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
                     for (int i = 0; i < couponActivityPo.getQuantity(); i++)
                     {
-                        sendCouponMessage(couponPo);
+                        //sendCouponMessage(couponPo);
+                        couponDao.addCoupon(couponPo);
                         returnObject.add(couponPo.getCouponSn());
                     }
                     //设置结束时间
@@ -524,12 +525,15 @@ public class CouponActivityService {
                     if (result == 0)
                         return new ReturnObject(ResponseCode.COUPON_FINISH);
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
-                    sendCouponMessage(couponPo);
+                   // sendCouponMessage(couponPo);
+                    couponDao.addCoupon(couponPo);
                     CouponActivityPo couponActivityPo1=new CouponActivityPo();
-                    couponActivityPo.setId(id);
+                    couponActivityPo1.setId(id);
                     String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    couponActivityPo.setQuantity(Integer.parseInt(couponQuantity));
-                    sendUpdateCouponQuantityMessage(couponActivityPo1);
+                    couponActivityPo1.setQuantity(Integer.parseInt(couponQuantity));
+                    CouponActivity couponActivity=new CouponActivity(couponActivityPo);
+                   // sendUpdateCouponQuantityMessage(couponActivityPo1);
+                    couponActivityDao.updateCouponActivity(couponActivity);
                     returnObject.add(couponPo.getCouponSn());
                     //设置结束时间
                     long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
