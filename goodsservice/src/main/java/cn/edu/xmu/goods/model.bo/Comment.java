@@ -106,9 +106,9 @@ public class Comment implements VoObject{
         this.orderItemId= po.getOrderitemId();
         this.type= po.getType();
         this.content= po.getContent();
-        if(null!=po.getState()){
-            this.state=State.getTypeByCode(po.getState().intValue());
-        }
+//        if(null!=po.getState()){
+//            this.state=State.getTypeByCode(po.getState().intValue());
+//        }
     }
 
     public Comment(CommentVoBody vo){
