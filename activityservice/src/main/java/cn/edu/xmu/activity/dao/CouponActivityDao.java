@@ -226,6 +226,26 @@ public class CouponActivityDao implements InitializingBean {
         }
         return returnObject;
     }
+    public ReturnObject updateCouponActivityQuantity(Integer quantity,Long id) {
+        CouponActivityPo couponActivityPo = new CouponActivityPo();
+        couponActivityPo.setId(id);
+
+        couponActivityPo.setQuantity(quantity);
+
+        ReturnObject returnObject = null;
+        try {
+            int ret = couponActivityMapper.updateByPrimaryKeySelective(couponActivityPo);
+            if (ret == 0) {
+                returnObject = new ReturnObject(ResponseCode.RESOURCE_ID_NOTEXIST);
+            } else {
+                redisTemplate.delete("couponActivity_"+ couponActivityPo.getId());//从redis中删除数据
+                returnObject = new ReturnObject();
+            }
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+        }
+        return returnObject;
+    }
 
     /**
      * @param id
