@@ -63,7 +63,6 @@ public class FlashSaleController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功")
     })
-    //@Audit //认证
     @GetMapping(value = "/timesegments/{id}/flashsales")
     public Flux<FlashSaleRetItemVo> getFlashSale(@PathVariable Long id) {
         if (logger.isDebugEnabled()) {
@@ -91,7 +90,7 @@ public class FlashSaleController {
             @ApiResponse(code = 0, message = "成功")
     })
     @PostMapping("/shops/{did}/timesegments/{id}/flashsales")
-    public Object insertFlashSale(
+    public Object createFlashSale(
             @PathVariable Long did,
             @PathVariable Long id,
             @Validated @RequestBody NewFlashSaleVo vo,
@@ -224,7 +223,7 @@ public class FlashSaleController {
         if (null != returnObject) {
             return returnObject;
         }
-        ReturnObject retObject = flashSaleService.insertSkuIntoPreSale(did,vo, id);
+        ReturnObject retObject = flashSaleService.insertSkuIntoFlashSale(did,vo, id);
         if (retObject.getCode().equals(ResponseCode.OK)) {
             return new ResponseEntity(
                     ResponseUtil.ok(retObject.getData()),

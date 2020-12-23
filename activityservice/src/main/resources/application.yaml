@@ -133,7 +133,7 @@ couponservice:
 
 rocketmq:
   # 指定namesrv地址
-  name-server: 172.16.4.195:9876
+  name-server: 172.16.4.31:9876
   producer:
     #生产者group名称
     group: producer_group

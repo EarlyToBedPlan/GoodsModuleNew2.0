@@ -41,19 +41,20 @@ public class FlashSaleDao implements InitializingBean {
     }
 
     /**
-     * @param localDateTime
      * @Description: 获取当前时段的秒杀活动
-     * @return: cn.edu.xmu.ooad.util.ReturnObject<java.util.List>
+     * @return: ReturnObject<Boolean>
      * @Author: LJP_3424
      * @Date: 2020/12/6 1:03
      */
-    public ReturnObject<Boolean> checkFlashSaleEnough(Long id, LocalDateTime flashDate) {
+    public ReturnObject<Boolean> checkFlashSale(Long id, LocalDateTime flashDate) {
         FlashSalePoExample example = new FlashSalePoExample();
         FlashSalePoExample.Criteria criteria = example.createCriteria();
         criteria.andTimeSegIdEqualTo(id);
         criteria.andFlashDateEqualTo(flashDate);
         criteria.andStateNotEqualTo(FlashSale.State.DELETE.getCode());
+
         logger.debug("findFlashSaleById: Time" + "SegmentId = " + id);
+
         List<FlashSalePo> flashSalePos = null;
         try {
             flashSalePos = flashSalePoMapper.selectByExample(example);
@@ -68,11 +69,11 @@ public class FlashSaleDao implements InitializingBean {
             return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR,
                     String.format("发生了严重的未知错误：%s", e.getMessage()));
         }
-        if (flashSalePos.size() > 0) {
-            return new ReturnObject<Boolean>(true);
-        } else {
+        // 查空
+        if(flashSalePos == null || flashSalePos.size() == 0){
             return new ReturnObject<Boolean>(false);
         }
+        return new ReturnObject<Boolean>(true);
     }
 
     public ReturnObject<FlashSalePo> getFlashSaleByFlashSaleId(Long flashSaleId) {
@@ -181,7 +182,7 @@ public class FlashSaleDao implements InitializingBean {
             if (ret == 1) {
                 return new ReturnObject<Long>(flashSalePo.getId());
             } else {
-                return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR, "插入失败");
+                return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR, "创建失败");
             }
         } catch (DataAccessException e) {
             // 数据库错误
