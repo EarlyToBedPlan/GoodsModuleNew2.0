@@ -9,41 +9,16 @@ server:
   tomcat:
     threads:
       max: 1000
-  address: 172.16.2.223
-
-dubbo:
-  # 配置服务信息
-  application:
-    name: privilege-service
-    # 禁用QOS同一台机器可能会有端口冲突现象
-    qos-enable: false
-    qos-accept-foreign-ip: false
-  scan:
-    # dubbo 服务扫描基准包
-    base-packages: cn.edu.xmu.provider.server
-  cloud:
-    subscribed-services:
-  # 配置注册中心
-  registry:
-    address: nacos://172.16.4.171:8848
-  # 设置协议-协议由提供方指定消费方被动接受
-  protocol:
-    name: dubbo
-    port: -1
-    # 设置超时时间
-  consumer:
-    timeout: 4000
-    check: false
-
+#  address: 172.16.2.223
 spring:
-  application:
-    name: privilege-service
   cloud:
     nacos:
       username: nacos
       password: 1-6123
       discovery:
-        server-addr: 172.16.4.171:8848
+        server-addr: 114.215.198.238:8848
+  application:
+    name: privilege-service
   profiles:
     active: dev
   datasource:
@@ -69,16 +44,53 @@ spring:
           slow-sql-millis: 100
       validation-query: select 1
     sql-script-encoding: UTF-8
-
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    #连接池最大连接数（使用负值表示没有限制）
+    lettuce:
+      pool:
+        max-active: 100
+        # 连接池中的最大空闲连接
+        max-idle: 100
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+    # 连接超时时间（毫秒）
+    timeout: 5000
 
 mybatis:
   #po对象的包
-  type-aliases-package: cn.edu.xmu.provider.model
+  type-aliases-package: cn.edu.xmu.goods.model
   #mapper.xml所在的位置
-  mapper-locations: classpath*:cn.edu.xmu.provider.mapper/*.xml
+  mapper-locations: classpath*:cn.edu.xmu.goods.mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
   configuration:
     #输出产生的SQL
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+
+#pagehelper分页插件配置
+pagehelper:
+  helper-dialect: mysql
+
+
+dubbo:
+  # 配置服务信息
+  application:
+    name: privilege-service
+    # 禁用QOS同一台机器可能会有端口冲突现象
+    qos-enable: false
+    qos-accept-foreign-ip: false
+  scan:
+    # dubbo 服务扫描基准包
+    base-packages: cn.edu.xmu.provider.service
+  protocol:
+    # dubbo 协议
+    name: dubbo
+    # dubbo 协议端口（ -1 表示自增端口，从 20880 开始）
+    port: -1
+  registry:
+    address: nacos://114.215.198.238:8848
 
