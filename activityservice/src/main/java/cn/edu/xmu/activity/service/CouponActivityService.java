@@ -462,26 +462,26 @@ public class CouponActivityService {
 
     @Transactional
     public ReturnObject<List<String>> getCoupon(Long userId, Long id) {
-//        String activityKey = "couponactivity_" + id;
-//        if (!redisTemplate.hasKey(activityKey)) {
-//            CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
-//            //检测活动是否存在
-//            if (couponActivityPo == null||couponActivityPo.getState()==CouponActivity.State.DELETED.getCode())
-//                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
-//            String json=JacksonUtil.toJson(couponActivityPo);
-//        redisTemplate.opsForValue().set(activityKey, json,600,TimeUnit.SECONDS);
-////            logger.debug(JacksonUtil.toJson(couponActivityPo));
-//        }
-//        String json = (String) redisTemplate.opsForValue().get(activityKey);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        CouponActivityPo couponActivityPo = null;
-//        try {
-//            couponActivityPo = objectMapper.readValue(json, new TypeReference<>() {
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
+        String activityKey = "couponactivity_" + id;
+        if (!redisTemplate.hasKey(activityKey)) {
+            CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
+            //检测活动是否存在
+            if (couponActivityPo == null||couponActivityPo.getState()==CouponActivity.State.DELETED.getCode())
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
+            String json=JacksonUtil.toJson(couponActivityPo);
+            redisTemplate.opsForValue().set(activityKey, json,600,TimeUnit.SECONDS);
+//            logger.debug(JacksonUtil.toJson(couponActivityPo));
+        }
+
+        String json = (String) redisTemplate.opsForValue().get(activityKey);
+        ObjectMapper objectMapper = new ObjectMapper();
+        CouponActivityPo couponActivityPo = null;
+        try {
+            couponActivityPo = objectMapper.readValue(json, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //优惠券活动不是上线状态
         if (couponActivityPo.getState().byteValue() != (byte) CouponActivity.State.ONLINE.getCode())
             return new ReturnObject(ResponseCode.COUPONACT_STATENOTALLOW);
@@ -503,35 +503,30 @@ public class CouponActivityService {
             else {
                 //如果redis中没有 是第一位领券的 将优惠券信息放入redis
                 String key = "coupon_" + couponActivityPo.getId();
-//                if (!redisTemplate.hasKey(key))
-//                    redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity());
-//                //查询用户是否领过优惠券
-//                if (redisTemplate.hasKey("coupon_" + id + "_" + userId))
-//                    return new ReturnObject<>(ResponseCode.USER_HASCOUPON);
                 if (quantityType == 0)//每人数量
                 {
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
                     for (int i = 0; i < couponActivityPo.getQuantity(); i++)
                     {
-                        //sendCouponMessage(couponPo);
-                        couponDao.addCoupon(couponPo);
+                        sendCouponMessage(couponPo);
                         returnObject.add(couponPo.getCouponSn());
                     }
                     //设置结束时间
-                    //long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
-                   // redisTemplate.opsForValue().set("coupon_" + id + "_" + userId, 1, second, TimeUnit.SECONDS);
+                    long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
+                    redisTemplate.opsForValue().set("coupon_" + id + "_" + userId, 1, second, TimeUnit.SECONDS);
                 } else if (quantityType == 1) {
-                   ///Long result = getCouponByLuaScript(key,1);
-//                    if (result == 0)
-//                        return new ReturnObject(ResponseCode.COUPON_FINISH);
+                    // String couponQuantity=redisTemplate.opsForValue().get(key).toString();
+                    Long result = getCouponByLuaScript(key,1);
+                    if (result == 0)
+                        return new ReturnObject(ResponseCode.COUPON_FINISH);
+                    String couponQuantity=redisTemplate.opsForValue().get(key).toString();
+                    logger.debug("the coupon quantity:"+couponQuantity);
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
-                   // sendCouponMessage(couponPo);
-                    couponDao.addCoupon(couponPo);
+                    sendCouponMessage(couponPo);
                     CouponActivityPo couponActivityPo1=new CouponActivityPo();
                     couponActivityPo1.setId(id);
-                    String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                   // sendUpdateCouponQuantityMessage(couponActivityPo1);
-                    couponActivityDao.updateCouponActivityQuantity(couponActivityPo.getQuantity()-1,id);
+                    couponActivityPo1.setQuantity(Integer.parseInt(couponQuantity));
+                    sendUpdateCouponQuantityMessage(couponActivityPo1);
                     returnObject.add(couponPo.getCouponSn());
                     //设置结束时间
                     long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
