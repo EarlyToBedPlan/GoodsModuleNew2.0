@@ -6,8 +6,7 @@ import cn.edu.xmu.goods.model.bo.Shop;
 import cn.edu.xmu.goods.model.po.ShopPo;
 import cn.edu.xmu.goods.model.po.ShopPoExample;
 import cn.edu.xmu.ooad.util.ResponseCode;
-
-import com.alibaba.nacos.api.common.ResponseCode;
+import cn.edu.xmu.ooad.util.ReturnObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
