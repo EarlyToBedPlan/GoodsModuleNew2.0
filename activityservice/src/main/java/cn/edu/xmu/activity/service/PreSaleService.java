@@ -33,7 +33,7 @@ public class PreSaleService {
     @Autowired
     PreSaleDao preSaleDao;
 
-    @DubboReference(check = false,version = "2.2.0")
+    @DubboReference(check = false,version = "2.2.0",group = "goods-service")
     IGoodsService goodsService;
 
 
