@@ -462,7 +462,7 @@ public class CouponActivityService {
 
     @Transactional
     public ReturnObject<List<String>> getCoupon(Long userId, Long id) {
-        String activityKey = "couponactivity_" + id;
+              String activityKey = "couponactivity_" + id;
         if (!redisTemplate.hasKey(activityKey)) {
             CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
             //检测活动是否存在
@@ -503,6 +503,8 @@ public class CouponActivityService {
             else {
                 //如果redis中没有 是第一位领券的 将优惠券信息放入redis
                 String key = "coupon_" + couponActivityPo.getId();
+                if(!redisTemplate.hasKey(key))
+                    redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity(),60*10, TimeUnit.SECONDS);
                 if (quantityType == 0)//每人数量
                 {
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
@@ -516,17 +518,18 @@ public class CouponActivityService {
                     redisTemplate.opsForValue().set("coupon_" + id + "_" + userId, 1, second, TimeUnit.SECONDS);
                 } else if (quantityType == 1) {
                     // String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    Long result = getCouponByLuaScript(key,1);
-                    if (result == 0)
-                        return new ReturnObject(ResponseCode.COUPON_FINISH);
-                    String couponQuantity=redisTemplate.opsForValue().get(key).toString();
-                    logger.debug("the coupon quantity:"+couponQuantity);
+                      Long result=  getCouponByLuaScript(key,1);
+                  if(result.intValue()==-1)
+                      return new ReturnObject<>(ResponseCode.COUPON_FINISH);
                     CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
-                    sendCouponMessage(couponPo);
+                    couponDao.addCoupon(couponPo);
+
+                    //sendCouponMessage(couponPo);
                     CouponActivityPo couponActivityPo1=new CouponActivityPo();
                     couponActivityPo1.setId(id);
-                    couponActivityPo1.setQuantity(Integer.parseInt(couponQuantity));
-                    sendUpdateCouponQuantityMessage(couponActivityPo1);
+                    couponActivityPo1.setQuantity(result.intValue());
+                    couponActivityDao.updateCouponActivityQuantity(result.intValue()-1,id);
+                    //sendUpdateCouponQuantityMessage(couponActivityPo1);
                     returnObject.add(couponPo.getCouponSn());
                     //设置结束时间
                     long second = couponActivityPo.getEndTime().toEpochSecond(ZoneOffset.ofHours(8))-LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8));
