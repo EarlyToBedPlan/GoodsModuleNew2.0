@@ -48,10 +48,10 @@ public class FlashSaleService {
     @Autowired
     FlashSaleItemDao flashSaleItemDao;
 
-    @DubboReference(check = false,version = "2.2.0",group = "goods-service")
+    @DubboReference(check = false,version = "2.2.0")
     IGoodsService goodsService;
 
-    @DubboReference(check = false,version = "2.3.0",group = "other-service")
+    @DubboReference(check = false,version = "2.3.0")
     OtherService otherService;
 
     @Autowired
