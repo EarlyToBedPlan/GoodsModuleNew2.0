@@ -50,20 +50,17 @@ public class CommentService{
 //            return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
 //        if(orderItemRetVo.getCustomerId()!=comment.getCustomerId())//用户没买过此商品
 //            return new ReturnObject<>(ResponseCode.USER_NOTBUY);
-        if(comment.getOrderItemId().intValue()==143)
-            return new ReturnObject();
         if(comment.getOrderItemId().intValue()==8888)//用户没买过此商品
             return new ReturnObject<>(ResponseCode.USER_NOTBUY);
 
         try{
-            ReturnObject insert=commentDao.checkCommentInsert(comment);
-            if(insert.getCode().equals(ResponseCode.COMMENT_EXISTED.getCode()))
-                return  insert;
+            if(commentDao.checkCommentInsert(comment))
+                return new ReturnObject<>(ResponseCode.COMMENT_EXISTED);
             CommentPo commentPo= commentDao.newGoodsSkuComment(comment);
 //            comment.setCustomerRetVo(new CustomerRetVo(otherService.getUserById(commentPo.getCustomerId())));
 //            comment.setId(commentPo.getId());
 //            VoObject retVo= comment.createRetVo();
-             return new ReturnObject<>(commentPo);
+            return new ReturnObject<>(commentPo);
         }catch (Exception e){
             logger.error("发生了严重的服务器内部错误：" + e.getMessage());
             return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
