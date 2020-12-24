@@ -77,6 +77,17 @@ public class CommentController {
 
     }
 
+    
+    /*******test*******/
+   
+   
+   @GetMapping("/test/test")
+    public Object dubboTest(){
+        return Common.decorateReturnObject(commentService.getDubboInfo());
+    }
+   
+   /***********************/
+    
 
     /**
      * @description:查看sku的评论列表（已通过审核）（无需登录）
