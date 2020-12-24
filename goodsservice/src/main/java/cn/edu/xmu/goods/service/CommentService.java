@@ -63,7 +63,7 @@ public class CommentService{
 //            comment.setCustomerRetVo(new CustomerRetVo(otherService.getUserById(commentPo.getCustomerId())));
 //            comment.setId(commentPo.getId());
 //            VoObject retVo= comment.createRetVo();
-            return new ReturnObject();
+             return new ReturnObject<>(commentPo);
         }catch (Exception e){
             logger.error("发生了严重的服务器内部错误：" + e.getMessage());
             return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
