@@ -21,7 +21,6 @@ spring:
       password: 1-6123
       discovery:
         server-addr: 172.16.4.171:8848
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
@@ -117,7 +116,7 @@ dubbo:
     # dubbo 协议端口（ -1 表示自增端口，从 20880 开始）
     port: -1
   cloud:
-      subscribed-services: goods-service,privilege-service,other-service,order-service,privilege-service
+    subscribed-services: goods-service,privilege-service,other-service,order-service
   registry:
     address: nacos://172.16.4.171:8848
 
