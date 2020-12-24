@@ -88,22 +88,23 @@ public class CouponActivityService {
 
     public Long getCouponByLuaScript(String couponCode,int num) {
 
-            //lua脚本语法
-            StringBuilder script = new StringBuilder();
-            script.append(" local buyNum = ARGV[1]");//参数
-            script.append(" local goodsKey = KEYS[1] ");//key键
-            script.append(" local goodsNum = redis.call('get',goodsKey) "); // 调用方式，必须是redis.call 或者pcall结合redis里的方法
-            script.append(" if goodsNum >= buyNum  ");
-            script.append(" then redis.call('decrby',goodsKey,buyNum)   ");
-            script.append(" return buyNum   ");
-            script.append(" else    ");
-            script.append(" return '0'  ");
-            script.append(" end");
+        //lua脚本语法
+        StringBuilder script = new StringBuilder();
+        script.append(" local buyNum = ARGV[1]");//参数
+        script.append(" local couponKey = KEYS[1] ");//key键
+        script.append(" local couponNum = redis.call('get',couponKey) "); // 调用方式，必须是redis.call 或者pcall结合redis里的方法
+        script.append(" if couponNum >= buyNum  ");
+        script.append(" then redis.call('decrby',couponKey,buyNum)   ");
+        script.append(" return couponNum   ");
+        script.append(" else    ");
+        script.append(" return '-1'  ");
+        script.append(" end");
 
-            DefaultRedisScript<String> longDefaultRedisScript = new DefaultRedisScript<>(script.toString(), String.class);
-            String result = stringRedisTemplate.execute(longDefaultRedisScript, Collections.singletonList(couponCode), String.valueOf(num));
-            return Long.valueOf(result);
+        DefaultRedisScript<String> longDefaultRedisScript = new DefaultRedisScript<>(script.toString(), String.class);
+        String result = stringRedisTemplate.execute(longDefaultRedisScript, Collections.singletonList(couponCode), String.valueOf(num));
+        return Long.valueOf(result);
     }
+
 
     /**
      * @description:获得优惠券的所有状态
@@ -442,7 +443,6 @@ public class CouponActivityService {
      */
     @Transactional
     public ReturnObject<PageInfo<VoObject>> getCouponByUserId(Long id, Integer state, Integer page, Integer pageSize) {
-        PageInfo<VoObject> returnObject = null;
         try {
             return new ReturnObject<>(couponDao.getCouponListByUserId(id, state, page, pageSize));
         } catch (Exception e) {
@@ -462,7 +462,7 @@ public class CouponActivityService {
 
     @Transactional
     public ReturnObject<List<String>> getCoupon(Long userId, Long id) {
-              String activityKey = "couponactivity_" + id;
+        String activityKey = "couponactivity_" + id;
         if (!redisTemplate.hasKey(activityKey)) {
             CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(id);
             //检测活动是否存在
@@ -507,7 +507,8 @@ public class CouponActivityService {
                     redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity(),60*10, TimeUnit.SECONDS);
                 if (quantityType == 0)//每人数量
                 {
-                     for (int i = 0; i < couponActivityPo.getQuantity(); i++)
+
+                    for (int i = 0; i < couponActivityPo.getQuantity(); i++)
                     {
                         CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
                         //sendCouponMessage(couponPo);
@@ -621,7 +622,7 @@ public class CouponActivityService {
             couponPo.setBeginTime(LocalDateTime.now());
             couponPo.setEndTime(LocalDateTime.now().plusDays(couponActivityPo.getValidTerm().intValue()));
         }
-        couponPo.setState((byte) Coupon.State.NOT_CLAIMED.getCode());
+        couponPo.setState((byte) Coupon.State.CLAIMED.getCode());
         return couponPo;
     }
 
