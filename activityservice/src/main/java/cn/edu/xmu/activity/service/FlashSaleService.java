@@ -51,7 +51,7 @@ public class FlashSaleService {
     @DubboReference(check = false,version = "2.2.0")
     IGoodsService goodsService;
 
-    @DubboReference(check = false,version = "2.3.0")
+    @DubboReference(check = false,version = "2.4.0")
     OtherService otherService;
 
     @Autowired
