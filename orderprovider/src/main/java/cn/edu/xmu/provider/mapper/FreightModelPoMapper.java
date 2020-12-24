@@ -3,8 +3,8 @@ package cn.edu.xmu.provider.mapper;
 
 import java.util.List;
 
-import cn.edu.xmu.orderservice.model.po.FreightModelPo;
-import cn.edu.xmu.orderservice.model.po.FreightModelPoExample;
+import cn.edu.xmu.provider.model.po.FreightModelPo;
+import cn.edu.xmu.provider.model.po.FreightModelPoExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface FreightModelPoMapper {

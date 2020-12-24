@@ -3,11 +3,11 @@ package cn.edu.xmu.provider.dao;
 
 import cn.edu.xmu.orderservice.model.bo.FreightModel;
 import cn.edu.xmu.orderservice.model.bo.OrderItem;
-import cn.edu.xmu.orderservice.model.po.*;
 import cn.edu.xmu.orderservice.model.vo.OrderItemRetVo;
 import cn.edu.xmu.provider.mapper.FreightModelPoMapper;
 import cn.edu.xmu.provider.mapper.OrderItemPoMapper;
 import cn.edu.xmu.provider.mapper.OrderPoMapper;
+import cn.edu.xmu.provider.model.po.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,9 @@ public class OrderDao{
                 return null;
             Long orderId = orderItemPo.getOrderId();
             OrderPo orderPo = orderPoMapper.selectByPrimaryKey(orderId);
-            OrderItemRetVo orderItemRetVo = new OrderItemRetVo(new OrderItem(orderItemPo),orderPo);
+            OrderItemRetVo orderItemRetVo = new OrderItemRetVo();
+            orderItemRetVo.setCustomerId(orderPo.getCustomerId());
+            orderItemRetVo.setOrderItemId(id);
             return orderItemRetVo;
         } catch (DataAccessException e) {
             logger.error("getOrderItemById: DataAccessException:" + e.getMessage());
@@ -72,7 +74,9 @@ public class OrderDao{
                 List<OrderItemPo> orderItemPos = orderItemPoMapper.selectByExample(itemPoExample);
                 for (OrderItemPo orderItemPo : orderItemPos) {
                     logger.debug("get orderItemPo id"+orderItemPo.getId());
-                    OrderItemRetVo orderItem = new OrderItemRetVo(new OrderItem(orderItemPo), orderPo);
+                    OrderItemRetVo orderItem = new OrderItemRetVo();
+                    orderItem.setOrderItemId(orderItem.getOrderItemId());
+                    orderItem.setCustomerId(orderItem.getCustomerId());
                     orderItems.add(orderItem);
                 }
 
@@ -131,22 +135,6 @@ public class OrderDao{
     }
 
     public FreightModel getFreightModelById(Long id) {
-        FreightModelPoExample example = new FreightModelPoExample();
-        FreightModelPoExample.Criteria criteria1 = example.createCriteria();
-        criteria1.andIdEqualTo(id);
-        try {
-            FreightModelPo freightModelPo = freightModelPoMapper.selectByPrimaryKey(id);
-            if(freightModelPo==null)
-                return null;
-            FreightModel freightModel = new FreightModel(freightModelPo);
-            return freightModel;
-        } catch (DataAccessException e) {
-            logger.error("getFreightModelById: DataAccessException:" + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            logger.error("other exception:" + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+        return null;
     }
 }

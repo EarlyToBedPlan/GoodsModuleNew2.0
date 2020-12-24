@@ -3,8 +3,8 @@ package cn.edu.xmu.provider.mapper;
 
 import java.util.List;
 
-import cn.edu.xmu.orderservice.model.po.OrderPo;
-import cn.edu.xmu.orderservice.model.po.OrderPoExample;
+import cn.edu.xmu.provider.model.po.OrderPo;
+import cn.edu.xmu.provider.model.po.OrderPoExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface OrderPoMapper {
