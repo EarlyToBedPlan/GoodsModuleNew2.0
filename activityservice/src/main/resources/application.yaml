@@ -117,7 +117,7 @@ dubbo:
     # dubbo 协议端口（ -1 表示自增端口，从 20880 开始）
     port: -1
   cloud:
-      ubscribed-services: goods-service,privilege-service,other-service,order-service,privilege-service
+      subscribed-services: goods-service,privilege-service,other-service,order-service,privilege-service
   registry:
     address: nacos://172.16.4.171:8848
 
