@@ -24,12 +24,12 @@ public class CommentRetVo implements VoObject {
     LocalDateTime gmtModified;
 
     public CommentRetVo(Comment comment){
-        this.id=comment.getId();
-        ////this.customerRetVo=comment.getCustomerRetVo();
+//        this.id=comment.getId();
+//        this.customerRetVo=comment.getCustomerRetVo();
         this.goodsSkuId=comment.getGoodsSkuId();
-        this.type=comment.getType();
-        this.content=comment.getContent();
-       // this.state=comment.getState().getCode().byteValue();
+//        this.type=comment.getType();
+//        this.content=comment.getContent();
+//        this.state=comment.getState().getCode().byteValue();
 //        this.gmtCreate=comment.getGmtCreate();
 //        this.gmtModified=comment.getGmtModified();
     }
