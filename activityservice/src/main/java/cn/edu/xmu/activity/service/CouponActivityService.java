@@ -507,10 +507,11 @@ public class CouponActivityService {
                     redisTemplate.opsForValue().set(key, couponActivityPo.getQuantity(),60*10, TimeUnit.SECONDS);
                 if (quantityType == 0)//每人数量
                 {
-                    CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
-                    for (int i = 0; i < couponActivityPo.getQuantity(); i++)
+                     for (int i = 0; i < couponActivityPo.getQuantity(); i++)
                     {
-                        sendCouponMessage(couponPo);
+                        CouponPo couponPo = createCoupon(userId, id, couponActivityPo);
+                        //sendCouponMessage(couponPo);
+                        couponDao.addCoupon(couponPo);
                         returnObject.add(couponPo.getCouponSn());
                     }
                     //设置结束时间
