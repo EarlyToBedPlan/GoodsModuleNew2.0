@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
  */
 @Data
 public class NewPreSaleVo {
-    @NotEmpty
     private String name;
     @NotNull
     private LocalDateTime beginTime;
