@@ -5,20 +5,20 @@ management:
         include: "*"
 
 server:
-  port: 8093
+  port: 8094
   tomcat:
     threads:
       max: 1000
-#  address: 172.16.2.223
+  #address: 172.16.2.223
 spring:
   cloud:
     nacos:
       username: nacos
       password: 1-6123
       discovery:
-        server-addr: 114.215.198.238:8848
+        server-addr: 172.16.4.171:8848
   application:
-    name: order-service
+    name: other-service
   profiles:
     active: dev
   datasource:
@@ -86,92 +86,15 @@ dubbo:
   scan:
     # dubbo 服务扫描基准包
     base-packages: cn.edu.xmu.provider.service
+#  cloud:
+#    subscribed-services: activty-service,other-service,order-service,privilege-service
   protocol:
     # dubbo 协议
     name: dubbo
     # dubbo 协议端口（ -1 表示自增端口，从 20880 开始）
     port: -1
   registry:
-    address: nacos://114.215.198.238:8848
+    address: nacos://172.16.4.171:8848
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: "*"
-#
-#server:
-#  port: 8093
-#  tomcat:
-#    threads:
-#      max: 1000
-##  address: 172.16.2.223
-#
-#dubbo:
-#  # 配置服务信息
-#  application:
-#    name: order-service
-#    # 禁用QOS同一台机器可能会有端口冲突现象
-#    qos-enable: false
-#    qos-accept-foreign-ip: false
-#  scan:
-#    # dubbo 服务扫描基准包
-#    base-packages: cn.edu.xmu.provider.server
-#  # 配置注册中心
-#  registry:
-#    address: nacos://114.215.198.238:8848
-#  # 设置协议-协议由提供方指定消费方被动接受
-#  protocol:
-#    name: dubbo
-#    port: 20880
-#    # 设置超时时间
-#  consumer:
-#    timeout: 60000
-#    check: false
-#
-#spring:
-#  application:
-#    name: order-service
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 114.215.198.238:4502
-#  profiles:
-#    active: dev
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    initialization-mode: always
-#    schema: classpath:schema.sql
-#    data: classpath:testdata.sql
-#    druid:
-#      #初始化时建立物理连接的个数
-#      initial-size: 3
-#      #最小连接池数量
-#      min-idle: 3
-#      #最大连接池数量
-#      max-active: 100
-#      #获取连接时最大等待时间
-#      max-wait: 60000
-#      filter:
-#        stat:
-#          #是否开启慢sql查询监控
-#          log-slow-sql: true
-#          #慢SQL执行时间
-#          slow-sql-millis: 100
-#      validation-query: select 1
-#    sql-script-encoding: UTF-8
-#
-#
-#
-#mybatis:
-#  #po对象的包
-#  type-aliases-package: cn.edu.xmu.provider.model
-#  #mapper.xml所在的位置
-#  mapper-locations: classpath*:cn.edu.xmu.provider.mapper/*.xml
-#  #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
-#  configuration:
-#    #输出产生的SQL
-#    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#    map-underscore-to-camel-case: true
-#
+
+
