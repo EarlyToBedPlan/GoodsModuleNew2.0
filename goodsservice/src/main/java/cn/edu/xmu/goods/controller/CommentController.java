@@ -103,10 +103,7 @@ public class CommentController {
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 10 : pageSize;
         ReturnObject<PageInfo<VoObject>> returnObject = commentService.getGoodsSkuCommentsList(id,page,pageSize);
-        if(returnObject.getData()==null)
         return Common.decorateReturnObject(returnObject);
-        else
-            return Common.getPageRetObject(returnObject);
     }
 
 
