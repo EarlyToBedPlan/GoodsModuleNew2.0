@@ -63,8 +63,8 @@ public class CommentService{
     }
 
     
-    public ReturnObject getDubboInfo(){
-        return new ReturnObject(orderService.getOrderItemById(8L));
+    public ReturnObject<OrderItemRetVo> getDubboInfo(){
+        return new ReturnObject<OrderItemRetVo>(orderService.getOrderItemById(8L));
     }
     
     
