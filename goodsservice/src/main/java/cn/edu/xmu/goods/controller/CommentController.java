@@ -81,9 +81,9 @@ public class CommentController {
     /*******test*******/
    
    
-   @GetMapping("/test/test")
-    public Object dubboTest(){
-        return Common.decorateReturnObject(commentService.getDubboInfo());
+   @GetMapping("/test/test/{id}")
+    public Object dubboTest(@PathVariable Long id){
+        return Common.decorateReturnObject(commentService.getDubboInfo(id));
     }
    
    /***********************/
