@@ -69,7 +69,7 @@ public class CommentController {
         comment.setOrderItemId(id);
         comment.setGmtCreate(LocalDateTime.now());
         ReturnObject returnObject = commentService.newGoodsSkuComment(comment);
-        if(returnObject.getCode()==ResponseCode.OK)
+        if(returnObject.equals(ResponseCode.OK))
             return new ResponseEntity(
                     ResponseUtil.ok(returnObject.getData()),
                     HttpStatus.CREATED);
@@ -77,17 +77,6 @@ public class CommentController {
 
     }
 
-    
-    /*******test*******/
-   
-   
-   @GetMapping("/test/test/{id}")
-    public Object dubboTest(@PathVariable Long id){
-        return Common.decorateReturnObject(commentService.getDubboInfo(id));
-    }
-   
-   /***********************/
-    
 
     /**
      * @description:查看sku的评论列表（已通过审核）（无需登录）
@@ -114,7 +103,10 @@ public class CommentController {
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 10 : pageSize;
         ReturnObject<PageInfo<VoObject>> returnObject = commentService.getGoodsSkuCommentsList(id,page,pageSize);
+        if(returnObject.getData()==null)
         return Common.decorateReturnObject(returnObject);
+        else
+            return Common.getPageRetObject(returnObject);
     }
 
 
