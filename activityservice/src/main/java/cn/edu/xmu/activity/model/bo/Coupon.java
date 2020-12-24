@@ -24,6 +24,7 @@ public class Coupon implements VoObject {
     Long customerId;
     String name;
     String  couponSn;
+    byte state;
     private Logger logger = LoggerFactory.getLogger(Coupon.class);
     public enum State {
         NOT_CLAIMED(0,"未领取"),
@@ -64,6 +65,7 @@ public Coupon()
 
     public Coupon(CouponPo po, CouponActivityPo couponActivityPo)
     {
+        this.state=po.getState();
         this.id=po.getId();
         this.customerId=po.getCustomerId();
         this.name=po.getName();
