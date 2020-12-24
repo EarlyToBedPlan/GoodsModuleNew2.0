@@ -395,7 +395,7 @@ public class CouponController {
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 10 : pageSize;
         ReturnObject<PageInfo<VoObject>> returnObject = couponActivityService.getCouponByUserId(id, state, page, pageSize);
-        return Common.getPageRetObject(returnObject);
+        return Common.decorateReturnObject(returnObject);
     }
 //    内部API
 //    @ApiOperation(value = "买家使用优惠券")
