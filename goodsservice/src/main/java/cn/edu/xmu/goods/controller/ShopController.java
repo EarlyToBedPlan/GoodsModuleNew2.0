@@ -142,7 +142,7 @@ public class ShopController {
             return Common.decorateReturnObject(returnObject);
         }
         else {
-            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
 
