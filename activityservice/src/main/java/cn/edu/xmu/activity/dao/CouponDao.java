@@ -74,6 +74,8 @@ public class CouponDao implements InitializingBean {
             CouponActivityPo couponActivityPo = couponActivityDao.getCouponActivityById(po.getActivityId());
             Coupon coupon = new Coupon(po, couponActivityPo);
             couponVos.add(coupon.createSimpleVo());
+            if(coupon.createSimpleVo()==null)
+                return null;
         }
         return new PageInfo<>(couponVos);
     }
