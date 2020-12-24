@@ -9,6 +9,7 @@ import cn.edu.xmu.ooad.util.ResponseCode;
 
 import cn.edu.xmu.ooad.util.ReturnObject;
 
+import com.alibaba.nacos.api.common.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -152,7 +153,7 @@ public class ShopDao implements InitializingBean{
                 returnObject = new ReturnObject(ResponseCode.RESOURCE_ID_NOTEXIST);
             } else {
                 logger.debug("closeShop success. shopId: " + shopId);
-                returnObject = new ReturnObject();
+                returnObject = new ReturnObject(ResponseCode.OK);
             }
         } catch (Exception e) {
             logger.error("发生了严重的服务器内部错误：" + e.getMessage());

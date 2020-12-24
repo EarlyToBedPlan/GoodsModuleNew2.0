@@ -138,19 +138,11 @@ public class ShopController {
     public Object userCloseShop(@PathVariable Long id,
                                 @Depart Long departId) {
         if (id.equals(departId)||departId.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(id);
-            if(shop.getState().equals(Shop.State.ONLINE)){
-                shop.setState((byte)Shop.State.DELETE.getCode());
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
             ReturnObject returnObject = shopService.closeShop(id);
             return Common.decorateReturnObject(returnObject);
         }
         else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
         }
     }
 
