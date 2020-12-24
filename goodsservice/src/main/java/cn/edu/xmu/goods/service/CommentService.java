@@ -77,9 +77,9 @@ public class CommentService{
     public ReturnObject<PageInfo<VoObject>> getGoodsSkuCommentsList(Long goodsSkuId, Integer page, Integer pageSize){
         PageInfo<VoObject> retObj=null;
         try {
-//            ReturnObject ret=goodsSkuService.getSkuById(goodsSkuId);
-//            if(ret.getCode().equals(ResponseCode.RESOURCE_ID_NOTEXIST))
-//                return  new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
+            boolean ret=goodsSkuService.checkSkuId(goodsSkuId);
+            if(ret==false)
+                return  new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
             return new ReturnObject<>(commentDao.getCommentListByGoodsSkuId(goodsSkuId,page,pageSize));
         } catch (Exception e) {
             logger.error("发生了严重的服务器内部错误ha：" + e.getMessage());
