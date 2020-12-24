@@ -312,6 +312,12 @@ public class GrouponController {
     }
 
 
+
+    @GetMapping("test/test")
+    public Object godsServiceTest(){
+        return Common.decorateReturnObject(grouponService.goodsGetTest());
+    }
+
     /**
      * 上线团购活动
      */

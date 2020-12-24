@@ -39,7 +39,7 @@ public class GrouponService {
     @Autowired
     GrouponDao grouponDao;
 
-    @DubboReference(check = false, version = "2.2.0")
+    @DubboReference(check = false, version = "2.2.0", group = "goods-service")
     IGoodsService goodsService;
 
     /**
@@ -223,6 +223,14 @@ public class GrouponService {
         return grouponDao.updateGroupon(newGrouponVo, id);
     }
 
+
+    public ReturnObject goodsGetTest(){
+        GoodsSku skuById = goodsService.getSkuById(280L);
+        ShopSimple simpleShopById = goodsService.getSimpleShopById(290L);
+        GoodsSimpleSpu simpleSpuById = goodsService.getSimpleSpuById(274L);
+        return new ReturnObject(simpleShopById);
+    }
+
     /**
      * @Description: 更改团购状态
      * @Param: No such property: code for class: Script1
@@ -253,14 +261,15 @@ public class GrouponService {
         } else {
             expectState = Groupon.State.ON.getCode();
         }
-        ReturnObject confirmResult = confirmGrouponId(grouponPo, shopId, expectState);
-        if (confirmResult.getCode() != ResponseCode.OK) {
-            return new ReturnObject(confirmResult.getCode(),confirmResult.getErrmsg());
-        }
         // id 与商店
         if(grouponPo.getShopId().longValue() != shopId.longValue()){
             return new ReturnObject(ResponseCode.RESOURCE_ID_OUTSCOPE);
         }
+        ReturnObject confirmResult = confirmGrouponId(grouponPo, shopId, expectState);
+        if (confirmResult.getCode() != ResponseCode.OK) {
+            return new ReturnObject(confirmResult.getCode(),confirmResult.getErrmsg());
+        }
+
         // 状态相同,改不了,下线的无法再下线,正如上线的无法再上线
         if (returnObject.getData().getState() == state) {
             return new ReturnObject(ResponseCode.GROUPON_STATENOTALLOW);
