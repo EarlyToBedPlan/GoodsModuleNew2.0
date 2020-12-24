@@ -46,7 +46,7 @@ public class ShopController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
     })
-    @GetMapping("/shops/states")
+    @GetMapping("/shops/state")
     public Object getShopState() {
         return Common.decorateReturnObject(shopService.getShopStates());
     }
