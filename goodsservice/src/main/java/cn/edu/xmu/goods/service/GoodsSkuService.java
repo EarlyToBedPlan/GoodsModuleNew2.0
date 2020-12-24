@@ -61,8 +61,8 @@ public class GoodsSkuService {
     @Autowired
     ShopService shopService;
 
-//    @DubboReference(version = "2.7.8",group = "activity-service",check = false)
-//    IActivityService iActivityService;
+    @DubboReference(version = "2.7.8",group = "activity-service",check = false)
+    IActivityService iActivityService;
 
     @Value("${goodsservice.dav.username}")
     private String davUsername;
@@ -281,7 +281,16 @@ public class GoodsSkuService {
     * @Author: Yancheng Lai
     * @Date: 2020/12/6 16:36
     */
-    
+    public boolean checkSkuId(Long id)
+    {
+        ReturnObject<GoodsSkuPo> goodsSkuReturnObject = goodsSkuDao.getSkuById(id);
+        GoodsSkuPo goodsSkuPo = goodsSkuReturnObject.getData();
+        if(goodsSkuPo == null || goodsSkuPo.getDisabled()!=0){
+            return false;
+        }
+        return true;
+    }
+
     @Transactional
     public ReturnObject<GoodsSkuRetVo> getSkuById(Long id){
         logger.debug("service: get Sku by id: "+ id);
@@ -452,10 +461,10 @@ public class GoodsSkuService {
     @Transactional
     public Long getPriceById(Long goodsSkuId) {
         Long result = null;
-        //result = iActivityService.getFlashSalePriceBySkuId(goodsSkuId);
-        if(result != null){
-            return  result;
-        }
+//        result = iActivityService.getFlashSalePriceBySkuId(goodsSkuId);
+//        if(result != null){
+//            return  result;
+//        }
         ReturnObject<List<FloatPricePo>> listReturnObject = floatPriceDao.getFloatPriceBySkuId(goodsSkuId);
         List<FloatPricePo> target=listReturnObject.getData();
         if(target != null){
