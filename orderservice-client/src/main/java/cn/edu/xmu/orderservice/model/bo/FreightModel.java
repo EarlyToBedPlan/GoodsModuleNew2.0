@@ -1,7 +1,6 @@
 package cn.edu.xmu.orderservice.model.bo;
 
 
-import cn.edu.xmu.orderservice.model.po.FreightModelPo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -67,13 +66,5 @@ public class FreightModel {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModify;
 
-    public FreightModel(FreightModelPo po){
-        this.id=po.getId();
-        this.name=po.getName();
-        this.type=po.getType();
-        this.shop_id= po.getShopId();
-        this.gmtCreate=po.getGmtCreate();
-        this.gmtModify=po.getGmtModified();
-    }
 
 }

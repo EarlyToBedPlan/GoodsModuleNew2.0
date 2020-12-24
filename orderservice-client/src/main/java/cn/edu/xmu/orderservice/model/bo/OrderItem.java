@@ -1,7 +1,6 @@
 package cn.edu.xmu.orderservice.model.bo;
 
 
-import cn.edu.xmu.orderservice.model.po.OrderItemPo;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -41,22 +40,5 @@ public class OrderItem implements Serializable {
 
     }
 
-    /**
-     * 根据po构建bo
-     * @param orderItemPo
-     */
-    public OrderItem(OrderItemPo orderItemPo) {
-        this.id=orderItemPo.getId();
-        this.orderId=orderItemPo.getOrderId();
-        this.goodsSkuId=orderItemPo.getGoodsSkuId();
-        this.quantity=orderItemPo.getQuantity();
-        this.price=orderItemPo.getPrice();
-        this.discount=orderItemPo.getDiscount();
-        this.name=orderItemPo.getName();
-        this.couponActivityId=orderItemPo.getCouponActivityId();
-        this.beSharedId=orderItemPo.getBeShareId();
-        this.gmtCreate=orderItemPo.getGmtCreate();
-        this.gmtModified=orderItemPo.getGmtModified();
-    }
 
 }
