@@ -18,7 +18,7 @@ spring:
       discovery:
         server-addr: 114.215.198.238:8848
   application:
-    name: other-service
+    name: order-service
   profiles:
     active: dev
   datasource:

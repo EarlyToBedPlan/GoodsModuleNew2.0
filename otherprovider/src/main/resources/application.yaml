@@ -9,7 +9,7 @@ server:
   tomcat:
     threads:
       max: 1000
-  address: 172.16.2.223
+  #address: 172.16.2.223
 spring:
   cloud:
     nacos:
@@ -86,8 +86,8 @@ dubbo:
   scan:
     # dubbo 服务扫描基准包
     base-packages: cn.edu.xmu.provider.service
-  cloud:
-    subscribed-services: activty-service,other-service,order-service,privilege-service
+#  cloud:
+#    subscribed-services: activty-service,other-service,order-service,privilege-service
   protocol:
     # dubbo 协议
     name: dubbo
