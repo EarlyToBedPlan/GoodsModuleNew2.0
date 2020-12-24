@@ -33,7 +33,7 @@ public class PreSaleService {
     @Autowired
     PreSaleDao preSaleDao;
 
-    @DubboReference(check = false,version = "2.2.0")
+    @DubboReference(check = false,version = "2.2.0",group = "goods-service")
     IGoodsService goodsService;
 
 
@@ -101,7 +101,9 @@ public class PreSaleService {
         if(goodsSku.getInventory() < vo.getQuantity()){
             return new ReturnObject(ResponseCode.SKU_NOTENOUGH);
         }
-
+        if(vo.getName().isEmpty()){
+            return new ReturnObject(ResponseCode.FIELD_NOTVALID);
+        }
         ReturnObject<PreSalePo> returnObject = preSaleDao.createNewPreSale(vo, shopId, id);
         if (returnObject.getCode() != ResponseCode.OK) {
             // 存在错误则直接返回
