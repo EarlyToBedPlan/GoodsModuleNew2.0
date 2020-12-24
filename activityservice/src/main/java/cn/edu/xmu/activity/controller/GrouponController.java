@@ -109,17 +109,7 @@ public class GrouponController {
         }
     }
 
-    /**
-     * @param state     商品状态
-     * @param spuId     商品ID
-     * @param beginTime 起止时间
-     * @param endTime   结束时间
-     * @param page      页码
-     * @param pageSize  页面大小
-     * @description:查看所有团购(包括下线的)
-     * @return: java.lang.Object
-     * @author: LJP_3424
-     */
+
     @ApiOperation(value = "筛选查询所有团购,包括下线的")
 
     @ApiResponses({
@@ -130,20 +120,19 @@ public class GrouponController {
             @PathVariable Long id,
             @RequestParam(required = false) Byte state,
             @RequestParam(required = false) Long spuId,
-            @RequestParam(required = false) String startTime,
-            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) LocalDateTime startTime,
+            @RequestParam(required = false) LocalDateTime endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
         if (startTime == null) {
-            startTime = "1900-01-01 00:00:00";
+            startTime = LocalDateTime.of(1900,1,1,0,0,0);
         }
         if (endTime == null) {
-            endTime = "2999-01-01 00:00:00";
+            endTime = LocalDateTime.of(2999,1,1,0,0,0);
         }
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ReturnObject<PageInfo<VoObject>> returnObject = grouponService.selectGroupon(id, state, spuId,
-                LocalDateTime.parse(startTime,df), LocalDateTime.parse(endTime,df), page, pageSize);
+                startTime, endTime, page, pageSize);
         if (returnObject.getCode().equals(ResponseCode.OK)) {
             return Common.getPageRetObject(returnObject);
         } else {
@@ -235,17 +224,6 @@ public class GrouponController {
     }
 
 
-    /**
-     * @param shopId
-     * @param id
-     * @param vo
-     * @param bindingResult
-     * @param departId
-     * @Description: 修改团购信息
-     * @return: java.lang.Object
-     * @Author: LJP_3424
-     * @Date: 2020/12/15 16:54
-     */
     @ApiOperation(value = "修改团购活动信息", produces = "application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
