@@ -45,7 +45,7 @@ public class CommentService{
         OrderItemRetVo orderItemRetVo=orderService.getOrderItemById(comment.getOrderItemId());
         if(orderItemRetVo==null)
             return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST);
-        if(orderItemRetVo.getCustomerId()!=comment.getCustomerId())//用户没买过此商品
+         if(orderItemRetVo.getCustomerId().longValue()!=comment.getCustomerId().longValue())//用户没买过此商品
             return new ReturnObject<>(ResponseCode.USER_NOTBUY);
         try{
             ReturnObject insert=commentDao.checkCommentInsert(comment);
