@@ -37,7 +37,7 @@ public class FloatPriceService{
     GoodsSkuDao goodsSkuDao;
 
     public boolean timeClash(LocalDateTime beginTime1, LocalDateTime endTime1, LocalDateTime beginTime2, LocalDateTime endTime2) {
-        if (beginTime1.isAfter(endTime2) || endTime1.isBefore(beginTime2))
+        if (beginTime1.isAfter(endTime2) || endTime1.isBefore(beginTime2)||beginTime1.isEqual(beginTime2)||endTime1.isEqual(endTime2))
             return false;
         return true;
     }
