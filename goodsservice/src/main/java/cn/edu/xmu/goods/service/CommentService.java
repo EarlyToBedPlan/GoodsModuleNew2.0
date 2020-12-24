@@ -62,6 +62,12 @@ public class CommentService{
         }
     }
 
+    
+    public ReturnObject getDubboInfo(){
+        return new ReturnObject(orderService.getOrderItemById(8L));
+    }
+    
+    
     /**
      * @Description 由商品id获得评论列表
      */
