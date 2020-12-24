@@ -29,6 +29,6 @@ public class ActivityConsumerListener implements RocketMQListener<String> {
     public void onMessage(String message) {
         CouponActivityPo po = JacksonUtil.toObj(message, CouponActivityPo.class);
         logger.info("onMessage: update coupon quantity =" + po +" time = "+ LocalDateTime.now());
-        couponActivityPoMapper.insertSelective(po);
+        couponActivityPoMapper.updateByPrimaryKeySelective(po);
     }
 }
