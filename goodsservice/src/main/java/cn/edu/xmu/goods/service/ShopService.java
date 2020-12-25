@@ -1,248 +1,193 @@
-package cn.edu.xmu.goods.controller;
+package cn.edu.xmu.goods.service;
 
-import cn.edu.xmu.goods.model.bo.Shop;
-import cn.edu.xmu.goods.model.vo.CommentConclusionVo;
-import cn.edu.xmu.goods.service.ShopService;
-import cn.edu.xmu.goods.model.vo.ShopVoBody;
-import cn.edu.xmu.ooad.annotation.Audit;
-import cn.edu.xmu.ooad.annotation.Depart;
-import cn.edu.xmu.ooad.util.Common;
+import cn.edu.xmu.goods.dao.GoodsSkuDao;
+import cn.edu.xmu.goods.model.bo.GoodsSku;
+import cn.edu.xmu.goods.model.vo.StateVo;
+import cn.edu.xmu.ooad.model.VoObject;
 import cn.edu.xmu.ooad.util.ResponseCode;
-import cn.edu.xmu.ooad.util.ResponseUtil;
 import cn.edu.xmu.ooad.util.ReturnObject;
-
-import io.swagger.annotations.*;
+import cn.edu.xmu.goods.dao.ShopDao;
+import cn.edu.xmu.goods.model.bo.Shop;
+import cn.edu.xmu.goods.model.po.ShopPo;
+import cn.edu.xmu.otherservice.model.po.ShoppingCartPo;
+import cn.edu.xmu.privilegeservice.client.IUserService;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.hibernate.validator.constraints.time.DurationMax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
-* @author Ruzhen Chang
+ * @author Ruzhen Chang
  */
+@Service
+public class ShopService{
 
-@Api(value = "店铺",tags = "shop")
-@RestController
-@RequestMapping(value = "/shop",produces = "application/json;charset=UTF-8")
-
-public class ShopController {
-    private static final Logger logger =LoggerFactory.getLogger(ShopController.class);
+    private Logger logger =  LoggerFactory.getLogger(ShopService.class);
 
     @Autowired
-    private ShopService shopService;
+    ShopDao shopDao;
     @Autowired
-    private HttpServletResponse httpServletResponse;
+    GoodsSkuDao goodsSkuDao;
+    @Autowired
+    GoodsSpuService goodsSpuService;
+    @DubboReference(check = false,version = "2.5.0")
+    IUserService userService;
+
+    /** 
+    * @Description: 得到店铺状态 
+    * @Param: [] 
+    * @return: cn.edu.xmu.ooad.util.ReturnObject 
+    * @Author: Yancheng Lai
+    * @Date: 2020/12/20 22:50
+    */
+    public ReturnObject getShopStates(){
+        List<StateVo> lst = new ArrayList<StateVo>();
+
+        for (Shop.State e : Shop.State.values()) {
+            StateVo stateVo = new StateVo((byte)e.getCode(),e.getDescription());
+            lst.add(stateVo);
+        }
+
+        return new ReturnObject<>( lst);
+    }
+
+    /**
+     * @description 新建店铺
+     * @author Ruzhen Chang
+     */
+    @Transactional
+    
+    public ReturnObject createShop(Shop shop) {
+        ReturnObject returnObject = new ReturnObject();
+        try {
+            if (shopDao.checkShopName(shop.getShopName())) {
+                return new ReturnObject<>(ResponseCode.valueOf("该姓名已被占用"));
+            }
+            ShopPo newShopPo=shopDao.insertShop(shop);
+            shop.setId(newShopPo.getId());
+            VoObject returnVo= shop.createRetVo();
+            return new ReturnObject<>(returnVo);
+
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
+        }
+    }
 
 
     /**
-     * 店家申请店铺
+     * @Description 修改店铺信息
      * @author Ruzhen Chang
      */
-    @ApiOperation(value = "店家申请店铺")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "ShopVo", name = "vo", value = "店铺信息", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @Audit
-    @PostMapping("/shops")
-    public Object insertShop(@Validated @RequestBody ShopVoBody shopVoBody,
-                             BindingResult bindingResult,
-                             @PathVariable Long id,
-                             @Depart Long departId) {
-        Object errors = Common.processFieldErrors(bindingResult, httpServletResponse);
-        if (null != errors) {
-            return errors;
-        }
-        if(departId != -1)
-            return ResponseCode.USER_HASSHOP;
-        Shop shop=new Shop(shopVoBody);
-        shop.setGmtCreate(LocalDateTime.now());
-        shop.setGmtModified(LocalDateTime.now());
-        ReturnObject returnObject = shopService.createShop(shop);
-        if(returnObject.equals(ResponseCode.OK))
-            return new ResponseEntity(
-                    ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
-                    HttpStatus.CREATED);
-        return Common.decorateReturnObject(returnObject);
-    }
-
-
-
-
-    @ApiOperation(value = "店家修改店铺信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "shopSimpleVo", value = "店铺信息", required = true, dataType = "shopSimpleVo", paramType = "body")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @PutMapping("/shops/{shopId}")
-    public Object updateShop(@PathVariable Long shopId,
-                             @Depart Long departId,
-                             @Validated @RequestBody ShopVoBody vo,
-                             BindingResult bindingResult) {
-        Object errors = Common.processFieldErrors(bindingResult, httpServletResponse);
-        if (null != errors) {
-            return errors;
-        }
-        if(departId.equals(shopId)){
-            Shop shop = new Shop(vo);
-            shop.setId(shopId);
-            ReturnObject returnObject = shopService.updateShop(shop);
-            return Common.decorateReturnObject(returnObject);
-        }
-        else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE), httpServletResponse);
-        }
-
-    }
-
-
-
-
-    @ApiOperation(value = "管理员或店家关闭店铺")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @DeleteMapping("/shops/{id}")
-    public Object userCloseShop(@PathVariable Long shopId,
-                                @Depart Long departId) {
-        if (shopId.equals(departId)||departId.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState().equals(Shop.State.ONLINE)){
-                shop.setState((byte)Shop.State.DELETE.getCode());
+    @Transactional
+    
+    public ReturnObject updateShop(Shop shop) {
+        try {
+            ShopPo po = shopDao.getShopById(shop.getId());
+            if (po == null) {
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
             }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.closeShop(shopId);
-            return Common.decorateReturnObject(returnObject);
-        }
-        else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return shopDao.updateShop(shop);
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
         }
     }
 
 
-
-    @ApiOperation(value = "平台管理员审核店铺信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "部门id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "id", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(paramType = "body", dataType = "Boolean", name = "conclusion", value = "审核信息", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @DeleteMapping("/shops/{shopId}/newshops/{id}/audit")
-    public Object userAuditShop(@PathVariable Long id,
-                                @PathVariable Long shopId,
-                                @RequestBody CommentConclusionVo conclusion,
-                                @Depart Long deptId) {
-        if (id.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState()==((byte)Shop.State.UNAUDITED.getCode())){
-                if(conclusion.getConclusion()==true){
-                    shop.setState((byte)Shop.State.OFFLINE.getCode());
-                }
-                else {
-                    shop.setState((byte)Shop.State.FAILED.getCode());
-                }
+    /**
+     * @description 关闭店铺
+     * @author Ruzhen Chang
+     * @param shopId
+     * @return
+     */
+    @Transactional
+    public ReturnObject closeShop(Long shopId) {
+        try {
+            if (shopDao.getShopById(shopId) == null) {
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺 id：" + shopId));
             }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.auditShop(shop);
-            return Common.decorateReturnObject(returnObject);
-        } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            goodsSpuService.setSkuDisabledByShopId(shopId);
+            //修改用户deptId
+            return shopDao.closeShop(shopId);
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
         }
     }
 
 
+    /**
+     * @Description 审核店铺信息
+     * @author Ruzhen Chang
+     * @param shop
+     * @return
+     */
 
-
-    @ApiOperation(value = "管理员上线店铺")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @DeleteMapping("/shops/{id}/onshelves")
-    public Object userOnShelvesShop(@PathVariable Long shopId,
-                                    @Depart Long departId) {
-
-        if (departId.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState().equals(Shop.State.OFFLINE)){
-                shop.setState((byte)Shop.State.ONLINE.getCode());
+    @Transactional
+    public ReturnObject auditShop(Shop shop) {
+        try {
+            ShopPo shopPo=shopDao.getShopById(shop.getId());
+            if(shopPo==null){
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
             }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
+            if(shop.getState()==(byte)Shop.State.OFFLINE.getCode()){
+                //修改用户deptId
             }
-            ReturnObject returnObject = shopService.onShelvesShop(shop);
-            return Common.decorateReturnObject(returnObject);
-        } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return shopDao.changeShopState(shop);
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
         }
     }
 
 
+    /**
+     * @description 上线店铺
+     * @author Ruzhen Chang
+     * @return
+     */
+    @Transactional
 
-    @ApiOperation(value = "管理员下线店铺")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @DeleteMapping("/shops/{id}/offshelves")
-    public Object userOffShelvesShop(@PathVariable Long shopId, @Depart Long departId) {
-        if (departId.equals(0l)) {
-            Shop shop = new Shop();
-            shop.setId(shopId);
-            if (shop.getState().equals(Shop.State.ONLINE)) {
-                shop.setState((byte) Shop.State.OFFLINE.getCode());
-            } else {
-                return ResponseCode.SHOP_STATENOTALLOW;
+    public ReturnObject onShelvesShop(Shop shop) {
+        try {
+            ShopPo shopPo=shopDao.getShopById(shop.getId());
+            if(shopPo==null){
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
             }
-            ReturnObject returnObject = shopService.offShelvesShop(shop);
-            return Common.decorateReturnObject(returnObject);
-        } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE), httpServletResponse);
+            return shopDao.changeShopState(shop);
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
         }
     }
+
+
+    /**
+     * @description 下线店铺
+     * @author Ruzhen Chang
+     * @return
+     */
+    @Transactional
+
+    public ReturnObject offShelvesShop(Shop shop) {
+        try {
+            ShopPo shopPo=shopDao.getShopById(shop.getId());
+            if(shopPo==null){
+                return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
+            }
+            return shopDao.changeShopState(shop);
+        } catch (Exception e) {
+            logger.error("发生了严重的服务器内部错误：" + e.getMessage());
+            return new ReturnObject<>(ResponseCode.INTERNAL_SERVER_ERR);
+        }
+    }
+
 }
