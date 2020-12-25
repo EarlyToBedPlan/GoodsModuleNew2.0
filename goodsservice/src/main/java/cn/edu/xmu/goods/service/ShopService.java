@@ -132,7 +132,7 @@ public class ShopService{
             if(shopPo==null){
                 return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
             }
-            if(shopPo.getState().equals(Shop.State.UNAUDITED.getCode())){
+            if(shopPo.getState()==((byte)Shop.State.UNAUDITED.getCode())){
                 if(conclusion == true){
                     shop.setState((byte)Shop.State.OFFLINE.getCode());
                 }
