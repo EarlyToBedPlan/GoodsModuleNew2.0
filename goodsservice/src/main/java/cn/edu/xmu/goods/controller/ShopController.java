@@ -200,7 +200,7 @@ public class ShopController {
             return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE), httpServletResponse);
         }
     }
-    @ApiOperation(value = "平台管理员审核店铺信息")
+       @ApiOperation(value = "平台管理员审核店铺信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
             @ApiImplicitParam(name = "shopId", value = "部门id", required = true, dataType = "Integer", paramType = "path"),
@@ -217,27 +217,15 @@ public class ShopController {
                                 @PathVariable Long shopId,
                                 @RequestBody CommentConclusionVo conclusion,
                                 @Depart Long deptId) {
-        if (id.equals(0l)) {
+        if (deptId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState()==((byte)Shop.State.UNAUDITED.getCode())){
-                if(conclusion.getConclusion()==true){
-                    shop.setState((byte)Shop.State.OFFLINE.getCode());
-                }
-                else {
-                    shop.setState((byte)Shop.State.FAILED.getCode());
-                }
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.auditShop(shop);
+            shop.setId(id);
+            ReturnObject returnObject = shopService.auditShop(shop,conclusion.getConclusion());
             return Common.decorateReturnObject(returnObject);
         } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
-
 
 }
 
