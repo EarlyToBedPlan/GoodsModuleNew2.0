@@ -1,3 +1,4 @@
+
 package cn.edu.xmu.goods.controller;
 
 import cn.edu.xmu.goods.model.bo.Shop;
@@ -24,48 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
-/**
- * @author Ruzhen Chang
- */
-
 @Api(value = "店铺",tags = "shop")
 @RestController
 @RequestMapping(value = "/shop",produces = "application/json;charset=UTF-8")
-
-public class ShopController package cn.edu.xmu.goods.controller;
-
-        import cn.edu.xmu.goods.model.bo.Shop;
-        import cn.edu.xmu.goods.model.vo.CommentConclusionVo;
-        import cn.edu.xmu.goods.service.ShopService;
-        import cn.edu.xmu.goods.model.vo.ShopVoBody;
-        import cn.edu.xmu.ooad.annotation.Audit;
-        import cn.edu.xmu.ooad.annotation.Depart;
-        import cn.edu.xmu.ooad.util.Common;
-        import cn.edu.xmu.ooad.util.ResponseCode;
-        import cn.edu.xmu.ooad.util.ResponseUtil;
-        import cn.edu.xmu.ooad.util.ReturnObject;
-
-        import io.swagger.annotations.*;
-        import org.slf4j.Logger;
-        import org.slf4j.LoggerFactory;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.http.HttpStatus;
-        import org.springframework.http.ResponseEntity;
-        import org.springframework.validation.BindingResult;
-        import org.springframework.validation.annotation.Validated;
-        import org.springframework.web.bind.annotation.*;
-
-        import javax.servlet.http.HttpServletResponse;
-        import java.time.LocalDateTime;
-
-/**
- * @author Ruzhen Chang
- */
-
-@Api(value = "店铺",tags = "shop")
-@RestController
-@RequestMapping(value = "/shop",produces = "application/json;charset=UTF-8")
-
 public class ShopController {
     private static final Logger logger =LoggerFactory.getLogger(ShopController.class);
 
