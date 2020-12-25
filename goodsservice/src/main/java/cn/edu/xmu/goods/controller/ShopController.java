@@ -40,6 +40,17 @@ public class ShopController {
     @Autowired
     private HttpServletResponse httpServletResponse;
 
+    @ApiOperation(value = "获得店铺状态")
+    @ApiImplicitParams({
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+    })
+    @GetMapping("/shops/states")
+    public Object getShopState() {
+        return Common.decorateReturnObject(shopService.getShopStates());
+    }
+
 
     /**
      * 店家申请店铺
@@ -57,7 +68,6 @@ public class ShopController {
     @PostMapping("/shops")
     public Object insertShop(@Validated @RequestBody ShopVoBody shopVoBody,
                              BindingResult bindingResult,
-                             @PathVariable Long id,
                              @Depart Long departId) {
         Object errors = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (null != errors) {
@@ -75,19 +85,10 @@ public class ShopController {
                     HttpStatus.CREATED);
         return Common.decorateReturnObject(returnObject);
     }
-    
-    
-    @ApiOperation(value = "获取店铺状态")
-    @ApiImplicitParams({
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("/shops/states")
-    public Object getShopState() {
-        return Common.decorateReturnObject(shopService.getShopStates());
-    }
-    
+
+
+
+
     @ApiOperation(value = "店家修改店铺信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -99,8 +100,8 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @PutMapping("/shops/{shopId}")
-    public Object updateShop(@PathVariable Long shopId,
+    @PutMapping("/shops/{id}")
+    public Object updateShop(@PathVariable Long id,
                              @Depart Long departId,
                              @Validated @RequestBody ShopVoBody vo,
                              BindingResult bindingResult) {
@@ -108,9 +109,9 @@ public class ShopController {
         if (null != errors) {
             return errors;
         }
-        if(departId.equals(shopId)){
+        if(departId.equals(id) || departId == 0l){
             Shop shop = new Shop(vo);
-            shop.setId(shopId);
+            shop.setId(id);
             ReturnObject returnObject = shopService.updateShop(shop);
             return Common.decorateReturnObject(returnObject);
         }
@@ -134,22 +135,14 @@ public class ShopController {
     })
     @Audit
     @DeleteMapping("/shops/{id}")
-    public Object userCloseShop(@PathVariable Long shopId,
+    public Object userCloseShop(@PathVariable Long id,
                                 @Depart Long departId) {
-        if (shopId.equals(departId)||departId.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState().equals(Shop.State.ONLINE)){
-                shop.setState((byte)Shop.State.DELETE.getCode());
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.closeShop(shopId);
+        if (id.equals(departId)||departId.equals(0l)) {
+            ReturnObject returnObject = shopService.closeShop(id);
             return Common.decorateReturnObject(returnObject);
         }
         else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
 
@@ -167,29 +160,18 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{shopId}/newshops/{id}/audit")
+    @PutMapping("/shops/{shopId}/newshops/{id}/audit")
     public Object userAuditShop(@PathVariable Long id,
                                 @PathVariable Long shopId,
                                 @RequestBody CommentConclusionVo conclusion,
                                 @Depart Long deptId) {
-        if (id.equals(0l)) {
+        if (deptId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState()==((byte)Shop.State.UNAUDITED.getCode())){
-                if(conclusion.getConclusion()==true){
-                    shop.setState((byte)Shop.State.OFFLINE.getCode());
-                }
-                else {
-                    shop.setState((byte)Shop.State.FAILED.getCode());
-                }
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
-            ReturnObject returnObject = shopService.auditShop(shop);
+            shop.setId(id);
+            ReturnObject returnObject = shopService.auditShop(shop,conclusion.getConclusion());
             return Common.decorateReturnObject(returnObject);
         } else {
-            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
 
@@ -206,19 +188,19 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{id}/onshelves")
-    public Object userOnShelvesShop(@PathVariable Long shopId,
+    @PutMapping("/shops/{id}/onshelves")
+    public Object userOnShelvesShop(@PathVariable Long id,
                                     @Depart Long departId) {
 
         if (departId.equals(0l)) {
             Shop shop=new Shop();
-            shop.setId(shopId);
-            if(shop.getState().equals(Shop.State.OFFLINE)){
-                shop.setState((byte)Shop.State.ONLINE.getCode());
-            }
-            else{
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
+            shop.setId(id);
+//            if(shop.getState().equals(Shop.State.OFFLINE)){
+//                shop.setState((byte)Shop.State.ONLINE.getCode());
+//            }
+//            else{
+//                return ResponseCode.SHOP_STATENOTALLOW;
+//            }
             ReturnObject returnObject = shopService.onShelvesShop(shop);
             return Common.decorateReturnObject(returnObject);
         } else {
@@ -238,16 +220,16 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{id}/offshelves")
-    public Object userOffShelvesShop(@PathVariable Long shopId, @Depart Long departId) {
+    @PutMapping("/shops/{id}/offshelves")
+    public Object userOffShelvesShop(@PathVariable Long id, @Depart Long departId) {
         if (departId.equals(0l)) {
             Shop shop = new Shop();
-            shop.setId(shopId);
-            if (shop.getState().equals(Shop.State.ONLINE)) {
-                shop.setState((byte) Shop.State.OFFLINE.getCode());
-            } else {
-                return ResponseCode.SHOP_STATENOTALLOW;
-            }
+            shop.setId(id);
+//            if (shop.getState().equals(Shop.State.ONLINE)) {
+//                shop.setState((byte) Shop.State.OFFLINE.getCode());
+//            } else {
+//                return ResponseCode.SHOP_STATENOTALLOW;
+//            }
             ReturnObject returnObject = shopService.offShelvesShop(shop);
             return Common.decorateReturnObject(returnObject);
         } else {
