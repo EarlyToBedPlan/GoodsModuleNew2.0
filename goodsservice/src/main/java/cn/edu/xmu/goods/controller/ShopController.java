@@ -212,7 +212,7 @@ public class ShopController {
             @ApiResponse(code = 504, message = "操作id不存在")
     })
     @Audit
-    @DeleteMapping("/shops/{shopId}/newshops/{id}/audit")
+    @PutMapping("/shops/{shopId}/newshops/{id}/audit")
     public Object userAuditShop(@PathVariable Long id,
                                 @PathVariable Long shopId,
                                 @RequestBody CommentConclusionVo conclusion,
