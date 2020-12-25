@@ -37,7 +37,7 @@ public class FloatPriceService{
     GoodsSkuDao goodsSkuDao;
 
     public boolean timeClash(LocalDateTime beginTime1, LocalDateTime endTime1, LocalDateTime beginTime2, LocalDateTime endTime2) {
-        if (beginTime1.isAfter(endTime2) || endTime1.isBefore(beginTime2)||beginTime1.isEqual(beginTime2)||endTime1.isEqual(endTime2))
+        if (beginTime1.isAfter(endTime2) || endTime1.isBefore(beginTime2))
             return false;
         return true;
     }
@@ -118,8 +118,8 @@ public class FloatPriceService{
         floatPrice.setGoodsSkuId(skuId);
         if(floatPriceInDataBase.getCode()==ResponseCode.RESOURCE_ID_NOTEXIST){
             if(floatPriceDao.insertFloatPrice(floatPrice).getCode()==ResponseCode.OK){
-                String userName=iUserService.getUserName(userId);
-                //String userName = "default";
+              //  String userName=iUserService.getUserName(userId);
+                String userName = "default";
                 retObj=new ReturnObject<>(new FloatPriceRetVo(floatPrice,userId,userId,userName));
             }
         }
