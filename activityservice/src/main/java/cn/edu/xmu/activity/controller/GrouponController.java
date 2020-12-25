@@ -125,15 +125,14 @@ public class GrouponController {
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
-        DateTimeFormatter dt = DateTimeFormatter.ofPattern("YYYY-MM-ddTHH:mm:ss");
         if (startTime == null) {
-            startTime = new String("1900-01-01T00:00:00");
+            startTime ="1900-01-01T00:00:00";
         }
         if (endTime == null) {
-            endTime = new String("2999-01-01T00:00:00");
+            endTime = "2999-01-01T00:00:00";
         }
-        LocalDateTime startTimeFor = LocalDateTime.parse(startTime, dt);
-        LocalDateTime endTimeFor = LocalDateTime.parse(endTime,dt);
+        LocalDateTime startTimeFor = LocalDateTime.parse(startTime);
+        LocalDateTime endTimeFor = LocalDateTime.parse(endTime);
         ReturnObject<PageInfo<VoObject>> returnObject = grouponService.selectGroupon(id, state, spuId,
                 startTimeFor, endTimeFor, page, pageSize);
         if (returnObject.getCode().equals(ResponseCode.OK)) {
