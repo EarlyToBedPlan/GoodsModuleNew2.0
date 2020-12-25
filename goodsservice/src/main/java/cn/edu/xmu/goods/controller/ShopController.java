@@ -25,7 +25,41 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
 /**
-* @author Ruzhen Chang
+ * @author Ruzhen Chang
+ */
+
+@Api(value = "店铺",tags = "shop")
+@RestController
+@RequestMapping(value = "/shop",produces = "application/json;charset=UTF-8")
+
+public class ShopController package cn.edu.xmu.goods.controller;
+
+        import cn.edu.xmu.goods.model.bo.Shop;
+        import cn.edu.xmu.goods.model.vo.CommentConclusionVo;
+        import cn.edu.xmu.goods.service.ShopService;
+        import cn.edu.xmu.goods.model.vo.ShopVoBody;
+        import cn.edu.xmu.ooad.annotation.Audit;
+        import cn.edu.xmu.ooad.annotation.Depart;
+        import cn.edu.xmu.ooad.util.Common;
+        import cn.edu.xmu.ooad.util.ResponseCode;
+        import cn.edu.xmu.ooad.util.ResponseUtil;
+        import cn.edu.xmu.ooad.util.ReturnObject;
+
+        import io.swagger.annotations.*;
+        import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.HttpStatus;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.validation.BindingResult;
+        import org.springframework.validation.annotation.Validated;
+        import org.springframework.web.bind.annotation.*;
+
+        import javax.servlet.http.HttpServletResponse;
+        import java.time.LocalDateTime;
+
+/**
+ * @author Ruzhen Chang
  */
 
 @Api(value = "店铺",tags = "shop")
@@ -145,39 +179,7 @@ public class ShopController {
             return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
         }
     }
-
-
-
-    @ApiOperation(value = "平台管理员审核店铺信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(name = "shopId", value = "部门id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "id", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(paramType = "body", dataType = "Boolean", name = "conclusion", value = "审核信息", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 504, message = "操作id不存在")
-    })
-    @Audit
-    @PutMapping("/shops/{shopId}/newshops/{id}/audit")
-    public Object userAuditShop(@PathVariable Long id,
-                                @PathVariable Long shopId,
-                                @RequestBody CommentConclusionVo conclusion,
-                                @Depart Long deptId) {
-        if (deptId.equals(0l)) {
-            Shop shop=new Shop();
-            shop.setId(id);
-            ReturnObject returnObject = shopService.auditShop(shop,conclusion.getConclusion());
-            return Common.decorateReturnObject(returnObject);
-        } else {
-            return Common.decorateReturnObject(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE));
-        }
-    }
-
-
-
-
+    
     @ApiOperation(value = "管理员上线店铺")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -236,4 +238,44 @@ public class ShopController {
             return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE), httpServletResponse);
         }
     }
+    @ApiOperation(value = "平台管理员审核店铺信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+            @ApiImplicitParam(name = "shopId", value = "部门id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "id", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(paramType = "body", dataType = "Boolean", name = "conclusion", value = "审核信息", required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 504, message = "操作id不存在")
+    })
+    @Audit
+    @DeleteMapping("/shops/{shopId}/newshops/{id}/audit")
+    public Object userAuditShop(@PathVariable Long id,
+                                @PathVariable Long shopId,
+                                @RequestBody CommentConclusionVo conclusion,
+                                @Depart Long deptId) {
+        if (id.equals(0l)) {
+            Shop shop=new Shop();
+            shop.setId(shopId);
+            if(shop.getState()==((byte)Shop.State.UNAUDITED.getCode())){
+                if(conclusion.getConclusion()==true){
+                    shop.setState((byte)Shop.State.OFFLINE.getCode());
+                }
+                else {
+                    shop.setState((byte)Shop.State.FAILED.getCode());
+                }
+            }
+            else{
+                return ResponseCode.SHOP_STATENOTALLOW;
+            }
+            ReturnObject returnObject = shopService.auditShop(shop);
+            return Common.decorateReturnObject(returnObject);
+        } else {
+            return Common.getNullRetObj(new ReturnObject<>(ResponseCode.RESOURCE_ID_OUTSCOPE),httpServletResponse);
+        }
+    }
+
+
 }
+
