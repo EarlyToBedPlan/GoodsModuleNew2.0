@@ -124,20 +124,27 @@ public class ShopService{
     }
 
 
-    /**
-     * @Description 审核店铺信息
-     * @author Ruzhen Chang
-     * @param shop
-     * @return
-     */
 
     @Transactional
-    public ReturnObject auditShop(Shop shop) {
+    public ReturnObject auditShop(Shop shop,Boolean conclusion) {
         try {
             ShopPo shopPo=shopDao.getShopById(shop.getId());
             if(shopPo==null){
                 return new ReturnObject<>(ResponseCode.RESOURCE_ID_NOTEXIST, String.format("店铺不存在 id：" + shop.getId()));
             }
+            if(shopPo.getState().equals(Shop.State.UNAUDITED.getCode())){
+                if(conclusion == true){
+                    shop.setState((byte)Shop.State.OFFLINE.getCode());
+                }
+                else {
+                    shop.setState((byte)Shop.State.FAILED.getCode());
+                }
+            }
+            else{
+                return new ReturnObject(ResponseCode.SHOP_STATENOTALLOW);
+            }
+
+
             if(shop.getState()==(byte)Shop.State.OFFLINE.getCode()){
                 //修改用户deptId
             }
