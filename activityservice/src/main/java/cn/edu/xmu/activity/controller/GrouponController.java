@@ -120,19 +120,22 @@ public class GrouponController {
             @PathVariable Long id,
             @RequestParam(required = false) Byte state,
             @RequestParam(required = false) Long spuId,
-            @RequestParam(required = false) LocalDateTime startTime,
-            @RequestParam(required = false) LocalDateTime endTime,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
+        DateTimeFormatter dt = DateTimeFormatter.ofPattern("YYYY-MM-ddTHH:mm:ss");
         if (startTime == null) {
-            startTime = LocalDateTime.of(1900,1,1,0,0,0);
+            startTime = new String("1900-01-01T00:00:00");
         }
         if (endTime == null) {
-            endTime = LocalDateTime.of(2999,1,1,0,0,0);
+            endTime = new String("2999-01-01T00:00:00");
         }
+        LocalDateTime startTimeFor = LocalDateTime.parse(startTime, dt);
+        LocalDateTime endTimeFor = LocalDateTime.parse(endTime,dt);
         ReturnObject<PageInfo<VoObject>> returnObject = grouponService.selectGroupon(id, state, spuId,
-                startTime, endTime, page, pageSize);
+                startTimeFor, endTimeFor, page, pageSize);
         if (returnObject.getCode().equals(ResponseCode.OK)) {
             return Common.getPageRetObject(returnObject);
         } else {
