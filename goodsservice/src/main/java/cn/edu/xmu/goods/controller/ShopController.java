@@ -75,10 +75,19 @@ public class ShopController {
                     HttpStatus.CREATED);
         return Common.decorateReturnObject(returnObject);
     }
-
-
-
-
+    
+    
+    @ApiOperation(value = "获取店铺状态")
+    @ApiImplicitParams({
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+    })
+    @GetMapping("/shops/states")
+    public Object getShopState() {
+        return Common.decorateReturnObject(shopService.getShopStates());
+    }
+    
     @ApiOperation(value = "店家修改店铺信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
