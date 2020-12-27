@@ -1,4 +1,3 @@
-
 package cn.edu.xmu.goods.controller;
 
 import cn.edu.xmu.goods.model.bo.Shop;
