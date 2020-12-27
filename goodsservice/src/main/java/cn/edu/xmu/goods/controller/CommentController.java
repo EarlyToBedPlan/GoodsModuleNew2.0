@@ -1,6 +1,5 @@
 package cn.edu.xmu.goods.controller;
 
-
 import cn.edu.xmu.goods.model.bo.Comment;
 import cn.edu.xmu.goods.model.vo.CommentConclusionVo;
 import cn.edu.xmu.goods.model.vo.CommentVo;
